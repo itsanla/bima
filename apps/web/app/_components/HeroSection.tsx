@@ -42,7 +42,7 @@ export default function HeroSection() {
       {/* Background photo + overlay */}
       <div className="absolute inset-0">
         <Image
-          src="/placeholder.webp"
+          src="/assets/hero-bg.png"
           alt="hero background"
           fill
           priority
