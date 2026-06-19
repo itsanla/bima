@@ -30,50 +30,40 @@ function SquareFootIcon() {
 }
 function ArrowLeftIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#252525" strokeWidth="2.5" strokeLinecap="round">
       <polyline points="15 18 9 12 15 6" />
     </svg>
   );
 }
 function ArrowRightIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#252525" strokeWidth="2.5" strokeLinecap="round">
       <polyline points="9 18 15 12 9 6" />
     </svg>
   );
 }
 
 const hotels = [
-  { id: 1, name: "Villa, Kemah Tinggi", price: "$ 990", bedrooms: 2, size: 214, rating: 4.93 },
-  { id: 2, name: "Villa, Kemah Tinggi", price: "$ 990", bedrooms: 2, size: 214, rating: 4.93 },
-  { id: 3, name: "Villa, Kuta Premiere", price: "$ 920", bedrooms: 5, size: 214, rating: 4.93 },
-  { id: 4, name: "Villa, Kuta Premiere", price: "$ 920", bedrooms: 5, size: 214, rating: 4.93 },
+  { id: 1, name: "Villa, Kemah Tinggi",  price: "$ 990", bedrooms: 2, size: 214, rating: 4.93, img: "/assets/hotel-kemah-1.png" },
+  { id: 2, name: "Villa, Kemah Tinggi",  price: "$ 990", bedrooms: 2, size: 214, rating: 4.93, img: "/assets/hotel-kemah-2.png" },
+  { id: 3, name: "Villa, Kuta Premiere", price: "$ 920", bedrooms: 5, size: 214, rating: 4.93, img: "/assets/hotel-kuta-1.png" },
+  { id: 4, name: "Villa, Kuta Premiere", price: "$ 920", bedrooms: 5, size: 214, rating: 4.93, img: "/assets/hotel-kuta-2.png" },
 ];
 
 const compareFeatures = [
-  {
-    title: "See it all",
-    desc: "From local hotels to global brands, discover millions of rooms all around the world.",
-  },
-  {
-    title: "Compare right here",
-    desc: "No need to search anywhere else. The biggest names in travel are right here.",
-  },
-  {
-    title: "Get exclusive rates",
-    desc: "We've special deals with the world's leading hotels and we pass these savings with you.",
-  },
+  { title: "See it all",          desc: "From local hotels to global brands, discover millions of rooms all around the world." },
+  { title: "Compare right here",  desc: "No need to search anywhere else. The biggest names in travel are right here." },
+  { title: "Get exclusive rates", desc: "We've special deals with the world's leading hotels and we pass these savings with you." },
 ];
 
 function HotelCard({ hotel }: { hotel: (typeof hotels)[0] }) {
   return (
     <div className="shrink-0 w-[300px]">
-      {/* Card image */}
       <div className="relative h-[336px] rounded-3xl overflow-hidden shadow-[0px_4px_4px_rgba(0,0,0,0.25)]">
-        <Image src="/placeholder.webp" alt={hotel.name} fill className="object-cover" />
+        <Image src={hotel.img} alt={hotel.name} fill className="object-cover" sizes="300px" />
         <div className="absolute inset-0 bg-black/10" />
 
-        {/* Rating badge */}
+        {/* Rating */}
         <div
           className="absolute top-5 left-5 flex items-center gap-1.5 rounded-full px-2.5 py-1"
           style={{ backdropFilter: "blur(20px)", background: "rgba(255,255,255,0.3)" }}
@@ -90,27 +80,21 @@ function HotelCard({ hotel }: { hotel: (typeof hotels)[0] }) {
         {/* Slider dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 items-center">
           {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className={`h-2 rounded-full transition-all ${i === 2 ? "w-6 bg-white" : "w-2 bg-white/50"}`}
-            />
+            <div key={i} className={`h-2 rounded-full ${i === 2 ? "w-6 bg-white" : "w-2 bg-white/50"}`} />
           ))}
         </div>
       </div>
 
-      {/* Details row */}
       <div className="mt-3 flex items-baseline justify-between gap-2">
         <p className="text-[#252525] font-bold text-[18px] leading-6">{hotel.name}</p>
         <p className="text-[#c49c74] font-extrabold text-[18px] leading-6 shrink-0">{hotel.price}</p>
       </div>
       <div className="mt-1.5 flex items-center gap-4">
         <div className="flex items-center gap-1.5 text-[#c9beb3]">
-          <BedIcon />
-          <span className="text-[14px] font-medium">{hotel.bedrooms} bedrooms</span>
+          <BedIcon /><span className="text-[14px] font-medium">{hotel.bedrooms} bedrooms</span>
         </div>
         <div className="flex items-center gap-1.5 text-[#c9beb3]">
-          <SquareFootIcon />
-          <span className="text-[14px] font-medium">{hotel.size}m²</span>
+          <SquareFootIcon /><span className="text-[14px] font-medium">{hotel.size}m²</span>
         </div>
         <span className="text-[#a1a7b0] text-[10px] ml-auto">per month</span>
       </div>
@@ -121,7 +105,6 @@ function HotelCard({ hotel }: { hotel: (typeof hotels)[0] }) {
 export default function HotelsSection() {
   return (
     <div className="bg-[#f0efef]">
-      {/* Hotels carousel */}
       <section className="pt-20 pb-14 px-24">
         <h2
           className="text-[40px] font-bold text-center mb-14 tracking-tight"
@@ -136,12 +119,10 @@ export default function HotelsSection() {
         </h2>
 
         <div className="relative">
-          {/* Left arrow */}
           <button className="absolute -left-5 top-[168px] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/80 shadow-md flex items-center justify-center hover:bg-white transition-colors">
             <ArrowLeftIcon />
           </button>
 
-          {/* Cards */}
           <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory">
             {hotels.map((hotel) => (
               <div key={hotel.id} className="snap-start">
@@ -150,24 +131,19 @@ export default function HotelsSection() {
             ))}
           </div>
 
-          {/* Right arrow */}
           <button className="absolute -right-5 top-[168px] -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/80 shadow-md flex items-center justify-center hover:bg-white transition-colors">
             <ArrowRightIcon />
           </button>
         </div>
 
-        {/* Pagination dots */}
         <div className="flex justify-center gap-2 mt-10 items-center">
           {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className={`h-2.5 rounded-full transition-all ${i === 2 ? "w-10 bg-[#1d1d1d]" : "w-5 bg-[#ccc]"}`}
-            />
+            <div key={i} className={`h-2.5 rounded-full ${i === 2 ? "w-10 bg-[#1d1d1d]" : "w-5 bg-[#ccc]"}`} />
           ))}
         </div>
       </section>
 
-      {/* Compare us strip */}
+      {/* Compare strip */}
       <div className="bg-[#1d1d1d] py-20 px-24">
         <div className="grid grid-cols-3 gap-20 text-center">
           {compareFeatures.map((f) => (
