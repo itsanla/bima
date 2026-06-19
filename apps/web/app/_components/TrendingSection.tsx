@@ -1,11 +1,11 @@
 import Image from "next/image";
 
 const destinations = [
-  { name: "Dubai",    gridArea: "1 / 1 / 2 / 2", height: 152 },
-  { name: "Paris",    gridArea: "1 / 2 / 3 / 3", height: 319 },
-  { name: "Tbilisi",  gridArea: "2 / 1 / 3 / 2", height: 152 },
-  { name: "Istanbul", gridArea: "3 / 1 / 4 / 2", height: 171 },
-  { name: "Taiwan",   gridArea: "3 / 2 / 4 / 3", height: 171 },
+  { name: "Dubai",    img: "/assets/dest-dubai.png",    gridArea: "1 / 1 / 2 / 2" },
+  { name: "Paris",    img: "/assets/dest-paris.png",    gridArea: "1 / 2 / 3 / 3" },
+  { name: "Tbilisi",  img: "/assets/dest-tbilisi.png",  gridArea: "2 / 1 / 3 / 2" },
+  { name: "Istanbul", img: "/assets/dest-istanbul.png", gridArea: "3 / 1 / 4 / 2" },
+  { name: "Taiwan",   img: "/assets/dest-taiwan.png",   gridArea: "3 / 2 / 4 / 3" },
 ];
 
 export default function TrendingSection() {
@@ -23,7 +23,6 @@ export default function TrendingSection() {
             products and services.
           </p>
 
-          {/* Email input row */}
           <div className="flex gap-4 mb-4">
             <div
               className="flex-1 h-[70px] rounded-xl px-5 flex items-center"
@@ -48,14 +47,13 @@ export default function TrendingSection() {
           </p>
         </div>
 
-        {/* Right — trending destinations */}
+        {/* Right — bento grid */}
         <div className="w-[480px] xl:w-[520px] shrink-0">
           <h3 className="text-[#f6f6f6] text-[38px] font-bold mb-1 tracking-tight">
             Trending destinations
           </h3>
           <p className="text-[#ccc] text-[16px] mb-8">Most popular choices for travelers</p>
 
-          {/* Bento grid */}
           <div
             className="grid grid-cols-2 gap-3"
             style={{ gridTemplateRows: "152px 152px 171px" }}
@@ -67,13 +65,14 @@ export default function TrendingSection() {
                 style={{ gridArea: d.gridArea }}
               >
                 <Image
-                  src="/placeholder.webp"
+                  src={d.img}
                   alt={d.name}
                   fill
-                  className="object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300"
+                  className="object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-300"
+                  sizes="240px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <p className="absolute bottom-4 left-4 text-[#f6f6f6] text-[32px] font-bold leading-none">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <p className="absolute bottom-4 left-4 text-[#f6f6f6] text-[30px] font-bold leading-none">
                   {d.name}
                 </p>
               </div>
