@@ -1,6 +1,6 @@
 # Bima Steamlog
 
-Sistem monitoring IoT untuk proses sterilisasi steam pada budidaya jamur. Perangkat keras berbasis ESP32 dengan modem GSM SIM800 mengirim data ke server cloud, lalu divisualisasikan melalui dashboard web.
+Sistem monitoring IoT untuk proses sterilisasi steam pada budidaya jamur. Perangkat keras berbasis ESP32 dengan modem GSM SIM800 mengirim data ke server cloud, lalu dimonitor oleh petani melalui aplikasi mobile.
 
 ## Arsitektur
 
@@ -11,17 +11,22 @@ Sistem monitoring IoT untuk proses sterilisasi steam pada budidaya jamur. Perang
 └─────────────────────┘                         └──────────┬───────────┘
                                                            │
                                                 ┌──────────▼───────────┐
-                                                │   Web Dashboard      │
-                                                │   (Next.js)          │
+                                                │   Mobile App         │
+                                                │   (perangkat utama)  │
                                                 └──────────────────────┘
+
+┌─────────────────────┐
+│   Web Landing Page  │  ── Iklan + link download Mobile App
+│   (Next.js)         │
+└─────────────────────┘
 ```
 
-| App       | Teknologi                       | Keterangan                            |
-|-----------|---------------------------------|---------------------------------------|
-| `api`     | Express.js 5, TypeScript 6      | REST API, manajemen data, logging     |
-| `web`     | Next.js 16, React 19, Tailwind  | Dashboard monitoring                  |
-| `iot`     | ESP32, SIM800, TinyGSM          | Sensor + transmisi data via GPRS      |
-| `mobile`  | *(planned)*                     | Aplikasi mobile                       |
+| App       | Teknologi                       | Keterangan                                     |
+|-----------|---------------------------------|------------------------------------------------|
+| `api`     | Express.js 5, TypeScript 6      | REST API, manajemen data, logging              |
+| `mobile`  | *(planned)*                     | Aplikasi utama petani — monitoring & kontrol   |
+| `iot`     | ESP32, SIM800, TinyGSM          | Sensor + transmisi data via GPRS               |
+| `web`     | Next.js 16, React 19, Tailwind  | Landing page — iklan & link download app       |
 
 ## Struktur Project
 
@@ -68,12 +73,12 @@ pnpm --dir apps/web install
 ## Menjalankan Development
 
 ```bash
-# Jalankan backend dan frontend sekaligus
+# Jalankan backend dan landing page sekaligus
 pnpm run dev
 
 # Atau jalankan terpisah di terminal berbeda
 pnpm run dev:api   # Backend → http://localhost:<PORT>
-pnpm run dev:web   # Frontend → http://localhost:3000
+pnpm run dev:web   # Landing page → http://localhost:3000
 ```
 
 Konfigurasi port dan environment ada di `apps/api/config/.env.development`.
