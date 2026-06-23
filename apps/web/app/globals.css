@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* Global baseline — shared across the whole app */
 
 :root {
   --primary: #252525;
@@ -9,27 +9,17 @@
   --muted: #c9beb3;
 }
 
-@theme inline {
-  --font-sans: var(--font-manrope);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-body {
-  background: white;
-  color: var(--primary);
-  font-family: var(--font-manrope), sans-serif;
+html {
+  scroll-behavior: smooth;
 }
 
-.gradient-text {
-  background: linear-gradient(to right, #252525, #6a6a6a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+img {
+  max-width: 100%;
+  height: auto;
 }

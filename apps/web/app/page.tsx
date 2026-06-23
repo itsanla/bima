@@ -1,15 +1,662 @@
+import type { Metadata } from 'next';
+import Image from 'next/image';
 
-import React from 'react';
+export const metadata: Metadata = {
+  title: 'Naxos — App Landing Page',
+  description: 'Best landing for your App showcase. Follow other investors, discover companies to believe in.',
+};
 
+// ─── Nav Links ───────────────────────────────────────────────────────────────
+const navLinks = [
+  { label: 'Home',        href: '#top-page'   },
+  { label: 'Features',    href: '#features'   },
+  { label: 'Screenshots', href: '#screenshots'},
+  { label: 'Support',     href: '#support'    },
+  { label: 'Blog',        href: '#blog'       },
+];
+
+// ─── Features ────────────────────────────────────────────────────────────────
+const featuresLeft = [
+  { icon: 'icon-basic-gear',         title: 'Custom Shortcuts',   desc: 'Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.' },
+  { icon: 'icon-basic-lock',         title: 'Secure Integration', desc: 'Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.' },
+  { icon: 'icon-basic-message-txt',  title: 'Free Live Chat',     desc: 'Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.' },
+];
+
+const featuresRight = [
+  { icon: 'icon-basic-share',          title: 'Social Share',    desc: 'Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.' },
+  { icon: 'icon-basic-sheet-multiple', title: 'Merge Files',     desc: 'Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.' },
+  { icon: 'icon-basic-alarm',          title: 'Action Reminder', desc: 'Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.' },
+];
+
+// ─── How It Works ─────────────────────────────────────────────────────────────
+const services = [
+  { icon: 'icon-basic-server2', title: 'Your Data in Cloud',  desc: 'Lorem ipsum dolor sit amet, conseda adipiscing elit. Aenean commodo ligula eget dolor massa.', delay: '0' },
+  { icon: 'icon-basic-headset', title: '24/7 Support',         desc: 'Lorem ipsum dolor sit amet, conseda adipiscing elit. Aenean commodo ligula eget dolor massa.', delay: '0.3s' },
+  { icon: 'icon-software-pen',  title: 'Exclusive Design',     desc: 'Lorem ipsum dolor sit amet, conseda adipiscing elit. Aenean commodo ligula eget dolor massa.', delay: '0.6s' },
+];
+
+// ─── Counters ─────────────────────────────────────────────────────────────────
+const counters = [
+  { icon: 'icon-basic-download',    count: '2,067', label: 'Total Downloads', delay: '0' },
+  { icon: 'icon-ecommerce-bag-plus', count: '982',  label: 'Happy Clients',   delay: '0.3s' },
+  { icon: 'icon-basic-tablet',       count: '890',  label: 'Active Users',    delay: '0.6s' },
+  { icon: 'icon-basic-star',         count: '537',  label: 'App Rates',       delay: '0.9s' },
+];
+
+// ─── Testimonials ─────────────────────────────────────────────────────────────
+const testimonials = [
+  { text: 'Fusce euismod eget nulla a tempus. Pellentesque in varius metus. Fusce iaculis cursus ante, vel vestibulum dui sagittis vitae pulvinar consequat tortor.', name: 'Jane Aniston',   company: 'From Globex',  img: '/naxos_assets/client-1.jpg' },
+  { text: 'Aenean sit amet est orci. Aenean at nisi eget nulla lobortis commodo. Nam eget lorem in ex aliquam dapibus sed augue auctor purus vitae, venenatis ex.',     name: 'Martin Jack',    company: 'From Hooli',   img: '/naxos_assets/client-2.jpg' },
+  { text: 'Suspendisse non velit lacus. Mauris efficitur lorem a justo semper, ut suscipit ligula malesuada. Donec dui nulla laoreet tortor in auctor interdum.',       name: 'David Dowsy',    company: 'From Acme',    img: '/naxos_assets/client-3.jpg' },
+  { text: 'Vestibulum lectus massa, volutpat ut tristique nec, volutpat in turpis. In vehicula tempus odio. Nullam enim ligula condimentum est sed urna tristique.',     name: 'Doglas Kosta',   company: 'From Soylent', img: '/naxos_assets/client-4.jpg' },
+  { text: 'Nunc accumsan finibus sollicitudin. Integer malesuada purus sapien, sit amet volutpat sem fringilla ut. Proin viverra scelerisque mollis iaculis id magna.',  name: 'Anthony Lee',    company: 'From Initech', img: '/naxos_assets/client-5.jpg' },
+  { text: 'Cras et est eu tellus fringilla congue. Nunc efficitur libero ut nunc volutpat porttitor. Aliquam in justo at neque ac massa ultricies, lobortis sem.',       name: 'Jonathon Doe',   company: 'From Umbrella',img: '/naxos_assets/client-6.jpg' },
+];
+
+// ─── Overview ─────────────────────────────────────────────────────────────────
+const overviewBoxes = [
+  { icon: 'icon-basic-compass', title: 'Easy to Use',     desc: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur' },
+  { icon: 'icon-basic-helm',    title: 'Monitor & Manage',desc: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur' },
+  { icon: 'icon-basic-link',    title: 'Stay Connected',  desc: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur' },
+];
+
+const checklistItems = [
+  'Ut fringilla est at nunc suscipit dictum. Nulla facilisi. Phasellus dignissim nibh eget imperdiet venenatis.',
+  'Nullam egestas tincidunt lectus, sagittis eros vestibulum in. Vestibulum finibus iaculis sagittis. Suspendisse viverra luctus.',
+  'Suspendisse at volutpat magna, vitae mattis metus. Integer posuere eu erat at pharetra. Aliquam ut pharetra diam.',
+  'Donec luctus, sem vel molestie efficitur, metus libero mollis neque, sed scelerisque arcu nisl eu lectus.',
+  'Fusce neque magna, fringilla ac vulputate at, venenatis a eros. Donec accumsan commodo tortor sed fringilla.',
+];
+
+// ─── Screenshots ──────────────────────────────────────────────────────────────
+const screenshots = Array.from({ length: 8 }, (_, i) => `/naxos_assets/screenshot-${i + 1}.jpg`);
+
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+const faqs = [
+  { q: 'Can I see Naxos in action before purchasing it?',     open: true },
+  { q: "I've got older Mac. Is Naxos compatible with it?",    open: false },
+  { q: 'What are the requirements for using Naxos?',          open: false },
+  { q: 'How does Naxos handle my privacy?',                   open: false },
+  { q: 'What is Naxos privacy policy?',                       open: false },
+];
+
+const faqAnswer = 'Nam erat orci, dictum eu iaculis a, scelerisque commodo risus. Mauris eu egestas ipsum. In hac habitasse platea dictumst. Duis in consequat est. Sed feugiat, ante in finibus ullamcorper, felis sem porta orci, sed pretium nibh nunc a tellus.';
+
+// ─── Blog ─────────────────────────────────────────────────────────────────────
+const posts = [
+  { img: '/naxos_assets/post-1.jpg', category: 'Photography', author: 'Matthew Johns',   date: 'January 14, 2024',   title: 'Assorted Color Buildings and Sea in Riomaggiore' },
+  { img: '/naxos_assets/post-2.jpg', category: 'Lifestyle',   author: 'Alex Wesly',      date: 'December 30, 2023',  title: 'Aerial Photography of Snowy Mountain Ranges' },
+  { img: '/naxos_assets/post-3.jpg', category: 'Development', author: 'Richard Jackson', date: 'February 12, 2022',  title: 'Forest Highway With Green Leaves' },
+];
+
+// ─── Clients ──────────────────────────────────────────────────────────────────
+const clients = Array.from({ length: 8 }, (_, i) => ({ img: `/naxos_assets/company-${i + 1}.png`, alt: `Client ${i + 1}` }));
+
+// ─── Footer Links ─────────────────────────────────────────────────────────────
+const usefulLinks  = ['Support', 'Privacy Policy', 'Terms & Conditions', 'Affiliate Program', 'Careers'];
+const productLinks = ['FAQ', 'Reviews', 'Features', 'Feedback', 'API'];
+
+// =============================================================================
 export default function NaxosPage() {
-    return (
-        <>
-            <link rel="stylesheet" href="/naxos_assets/e44bc1ceb6ea6728.css" />
-            <link rel="stylesheet" href="/naxos_assets/73e628e842813242.css" />
-            <link rel="stylesheet" href="/naxos_assets/css" />
-            <link rel="stylesheet" href="/naxos_assets/red.css" />
-            <link rel="stylesheet" href="/naxos_assets/www-player.css" />
-            <div dangerouslySetInnerHTML={{ __html: `<div><div class="page-loader" style="display: none;"><div class="progress"></div></div><header id="top-page" class="header"><div id="mainNav" class="main-menu-area animated"><div class="container"><div class="align-items-center row"><div class="col-12 col-lg-2 d-flex justify-content-between align-items-center col"><div class="logo"><a class="navbar-brand navbar-brand1" href="https://naxos-nextjs.vercel.app/"><img src="/naxos_assets/logo-white.png" alt="Naxos"></a><a class="navbar-brand navbar-brand2" href="https://naxos-nextjs.vercel.app/"><img src="/naxos_assets/logo.png" alt="Naxos"></a></div><div class="menu-bar d-lg-none" role="button" tabindex="0"><span></span><span></span><span></span></div></div><div class="op-mobile-menu col-lg-10 p-0 d-lg-flex align-items-center justify-content-end" role="button" tabindex="0"><div class="m-menu-header d-flex justify-content-between align-items-center d-lg-none"><a href="https://naxos-nextjs.vercel.app/video#" class="logo"><img src="/naxos_assets/logo.png" alt="Naxos"></a><span class="close-button" role="button" tabindex="0"></span></div><ul class="nav-menu d-lg-flex flex-wrap list-unstyled justify-content-center"><li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://naxos-nextjs.vercel.app/#top-page"><span>Home</span></a></li><li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://naxos-nextjs.vercel.app/#features"><span>Features</span></a></li><li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://naxos-nextjs.vercel.app/#screenshots"><span>Screenshots</span></a></li><li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://naxos-nextjs.vercel.app/#support"><span>Support</span></a></li><li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://naxos-nextjs.vercel.app/blog"><span>Blog</span></a></li><li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://naxos-nextjs.vercel.app/contact"><span>Contact</span></a></li><li class="nav-item search-option"><a class="nav-link" href="https://naxos-nextjs.vercel.app/video#"><i class="fas fa-search"></i></a></li></ul></div></div></div></div></header><div class="search-wrapper"><form role="search" method="get" class="search-form" action="https://naxos-nextjs.vercel.app/video#"><input type="search" name="s" id="s" placeholder="Search Keyword" class="searchbox-input" autocomplete="off" required=""><span>Input your search keywords and press Enter.</span></form><div class="search-wrapper-close"><span class="search-close-btn" role="button" tabindex="0"></span></div></div><section id="home" class="banner video-bg bottom-oval"><div class="video-bg"><iframe frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Free After Effects Intro Template #82 : 3D Phone Logo Reveal for After Effects" width="100%" height="100%" src="/naxos_assets/mqEeWiRwv0k.html" id="widget2"></iframe></div><div class="container"><div class="align-items-center row"><div class="col-12 col-lg-6 offset-lg-3 col"><div class="banner-text text-center"><h1 class="wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0s" style="visibility: visible; animation-duration: 1s; animation-delay: 0s;">Made for better</h1><p class="wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.3s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.3s;">Best landing for your App showcase. Follow other investors, discover companies to believe in.</p><div class="button-store wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.6s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.6s;"><a href="https://naxos-nextjs.vercel.app/video#" class="d-inline-flex align-items-center m-2 m-sm-0 me-sm-3"><img src="/naxos_assets/google-play.png" alt=""></a><a href="https://naxos-nextjs.vercel.app/video#" class="d-inline-flex align-items-center m-2 m-sm-0"><img src="/naxos_assets/app-store.png" alt=""></a></div></div><div class="empty-30"></div></div></div></div><div class="banner-image-center w-100 wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.3s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.3s;"><img src="/naxos_assets/video-welcome.png" alt=""></div></section><section id="features" class="bg-grey"><div class="container"><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center"><h3>Awesome Features</h3><p>Sed laoreet diam sagittis tempus convallis. Interdum et malesuada fames ac ante ipsum primis in faucibus. </p></div></div></div><div class="d-flex align-items-center row"><div class="col-12 col-md-6 col-lg-4 col"><ul class="features-item"><li><div class="feature-box d-flex box-left"><div class="box-icon"><div class="icon icon-basic-gear"></div></div><div class="box-text align-self-center align-self-md-start"><h4>Custom Shortcuts</h4><p>Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.</p></div></div></li><li><div class="feature-box d-flex box-left"><div class="box-icon"><div class="icon icon-basic-lock"></div></div><div class="box-text align-self-center align-self-md-start"><h4>Secure Integration</h4><p>Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.</p></div></div></li><li><div class="feature-box d-flex box-left"><div class="box-icon"><div class="icon icon-basic-message-txt"></div></div><div class="box-text align-self-center align-self-md-start"><h4>Free Live Chat</h4><p>Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.</p></div></div></li></ul></div><div class="col-12 col-lg-4 d-none d-lg-block col"><div class="features-thumb text-center"><img src="/naxos_assets/awesome-features.png" alt=""></div></div><div class="col-12 col-md-6 col-lg-4 col"><ul class="features-item"><li><div class="feature-box d-flex"><div class="box-icon"><div class="icon icon-basic-share"></div></div><div class="box-text align-self-center align-self-md-start"><h4>Social Share</h4><p>Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.</p></div></div></li><li><div class="feature-box d-flex"><div class="box-icon"><div class="icon icon-basic-sheet-multiple"></div></div><div class="box-text align-self-center align-self-md-start"><h4>Merge Files</h4><p>Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.</p></div></div></li><li><div class="feature-box d-flex"><div class="box-icon"><div class="icon icon-basic-alarm"></div></div><div class="box-text align-self-center align-self-md-start"><h4>Action Reminder</h4><p>Semper a augue suscipit, luctus neque purus ipsum neque dolor primis libero tempus velna culpa expedita.</p></div></div></li></ul></div></div></div></section><section id="services"><div class="container"><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center"><h3>How It Works?</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo justo. Nullam dictum felis eu pede mollis pretium.</p></div></div></div><div class="row"><div data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0" class="col-12 col-lg-4 res-margin wow fadeInUp col" style="visibility: visible; animation-duration: 1s;"><div class="service-single"><div class="icon icon-basic-server2"></div><h5>Your Data in Cloud</h5><p>Lorem ipsum dolor sit amet, conseda adipiscing elit. Aenean commodo ligula eget dolor massa.</p></div></div><div data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.3s" class="col-12 col-lg-4 res-margin wow fadeInUp col" style="visibility: visible; animation-duration: 1s; animation-delay: 0.3s;"><div class="service-single"><div class="icon icon-basic-headset"></div><h5>24/7 Support</h5><p>Lorem ipsum dolor sit amet, conseda adipiscing elit. Aenean commodo ligula eget dolor massa.</p></div></div><div data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.6s" class="col-12 col-lg-4 res-margin wow fadeInUp col" style="visibility: visible; animation-duration: 1s; animation-delay: 0.6s;"><div class="service-single"><div class="icon icon-software-pen"></div><h5>Exclusive Design</h5><p>Lorem ipsum dolor sit amet, conseda adipiscing elit. Aenean commodo ligula eget dolor massa.</p></div></div></div></div></section><section id="parallax-video" class="parallax" data-image="/images/parallax/video.jpg" style="background-image: url(&quot;/images/parallax/video.jpg&quot;);"><div class="overlay"></div><div class="container"><div class="row"><div class="video-btn wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0s" style="visibility: visible; animation-duration: 1s; animation-delay: 0s;"><a href="https://naxos-nextjs.vercel.app/video#" data-rel="lightcase" class="play-btn"><i class="fas fa-play"></i></a><span class="video-text">Watch This Video</span></div></div></div></section><section id="testimonials"><div class="container"><div class="row justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center"><h3>Client Reviews</h3><p>Donec purus est, tincidunt eu sodales quis, vehicula quis enim. Morbi dapibus, tellus a gravida faucibus, elit ipsum.</p></div></div></div><div class="row row"><div class="col-12 testimonial-carousel col"><div class="block-text row"><div class="slick-slider carousel-text testimonial-slider col-12 col-lg-8 offset-lg-2 slick-initialized" dir="ltr"><div class="slick-list"><div class="slick-track" style="width: 14364px; opacity: 1;"><div data-index="0" class="slick-slide slick-active slick-current" tabindex="-1" aria-hidden="false" style="outline: none; width: 756px; position: relative; left: 0px; opacity: 1; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Fusce euismod eget nulla a tempus. Pellentesque in varius metus. Fusce iaculis cursus ante, vel vestibulum dui sagittis vitae pulvinar consequat tortor. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="1" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -756px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Aenean sit amet est orci. Aenean at nisi eget nulla lobortis commodo. Nam eget lorem in ex aliquam dapibus sed augue auctor purus vitae, venenatis ex. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="2" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -1512px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Suspendisse non velit lacus. Mauris efficitur lorem a justo semper, ut suscipit ligula malesuada. Donec dui nulla laoreet tortor in auctor interdum. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="3" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -2268px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Vestibulum lectus massa, volutpat ut tristique nec, volutpat in turpis. In vehicula tempus odio. Nullam enim ligula condimentum est sed urna tristique rhoncus. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="4" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -3024px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Nunc accumsan finibus sollicitudin. Integer malesuada purus sapien, sit amet volutpat sem fringilla ut. Proin viverra scelerisque mollis iaculis id magna ut vestibulum. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="5" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -3780px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Cras et est eu tellus fringilla congue. Nunc efficitur libero ut nunc volutpat porttitor. Aliquam in justo at neque ac massa ultricies, lobortis sem. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="6" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -4536px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Vivamus pellentesque dignissim neque, quis viverra diam venenatis sit amet. Donec dignissim turpis quis libero posuere auctor finibus fermentum libero. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="7" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -5292px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Aenean varius accumsan eros, id molestie leo vestibulum a. Ut semper dictum feugiat. Integer tincidunt interdum eros ut accumsan erat lectus, ultrices. <i class="fas fa-quote-right"></i></p></div></div></div></div><div data-index="8" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 756px; position: relative; left: -6048px; opacity: 0; transition: opacity 500ms, visibility 500ms;"><div><div tabindex="-1" style="width:100%;display:inline-block"><div class="single-box"><p><i class="fas fa-quote-left"></i> Morbi viverra ultrices magna vel egestas. Suspendisse rutrum, lacus nec sodales gravida, augue ante sollicitudin sem fringilla euismod mauris ut metus nisl. <i class="fas fa-quote-right"></i></p></div></div></div></div></div></div></div></div><div class="block-media row"><div class="slick-slider carousel-images testimonial-nav col-12 col-lg-8 offset-lg-2 slick-initialized" dir="ltr"><div class="slick-list" style="padding:0px 50px"><div class="slick-track" style="width: 2750px; opacity: 1; transform: translate3d(-440px, 0px, 0px);"><div data-index="-7" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-3.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>David Dowsy</h3><span>From Acme</span></div></div></div></div><div data-index="-6" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-4.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Doglas Kosta</h3><span>From Soylent</span></div></div></div></div><div data-index="-5" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-5.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Anthony Lee</h3><span>From Initech</span></div></div></div></div><div data-index="-4" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-6.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Jonathon Doe</h3><span>From Umbrella</span></div></div></div></div><div data-index="-3" tabindex="-1" class="slick-slide slick-active slick-cloned" aria-hidden="false" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-7.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Xenia Mell</h3><span>From Massive</span></div></div></div></div><div data-index="-2" tabindex="-1" class="slick-slide slick-active slick-cloned" aria-hidden="false" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-8.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Shane Catson</h3><span>From Capital</span></div></div></div></div><div data-index="-1" tabindex="-1" class="slick-slide slick-active slick-cloned" aria-hidden="false" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-9.jpg" alt="3" class="img-fluid rounded-circle"><div class="client-info"><h3>Chris Wort</h3><span>From Sylhost</span></div></div></div></div><div data-index="0" class="slick-slide slick-active slick-center slick-current" tabindex="-1" aria-hidden="false" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-1.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Jane Aniston</h3><span>From Globex</span></div></div></div></div><div data-index="1" class="slick-slide slick-active" tabindex="-1" aria-hidden="false" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-2.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Martin Jack</h3><span>From Hooli</span></div></div></div></div><div data-index="2" class="slick-slide slick-active" tabindex="-1" aria-hidden="false" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-3.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>David Dowsy</h3><span>From Acme</span></div></div></div></div><div data-index="3" class="slick-slide slick-active" tabindex="-1" aria-hidden="false" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-4.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Doglas Kosta</h3><span>From Soylent</span></div></div></div></div><div data-index="4" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-5.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Anthony Lee</h3><span>From Initech</span></div></div></div></div><div data-index="5" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-6.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Jonathon Doe</h3><span>From Umbrella</span></div></div></div></div><div data-index="6" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-7.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Xenia Mell</h3><span>From Massive</span></div></div></div></div><div data-index="7" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-8.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Shane Catson</h3><span>From Capital</span></div></div></div></div><div data-index="8" class="slick-slide" tabindex="-1" aria-hidden="true" style="outline: none; width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-9.jpg" alt="3" class="img-fluid rounded-circle"><div class="client-info"><h3>Chris Wort</h3><span>From Sylhost</span></div></div></div></div><div data-index="9" tabindex="-1" class="slick-slide slick-center slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-1.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Jane Aniston</h3><span>From Globex</span></div></div></div></div><div data-index="10" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-2.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Martin Jack</h3><span>From Hooli</span></div></div></div></div><div data-index="11" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-3.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>David Dowsy</h3><span>From Acme</span></div></div></div></div><div data-index="12" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-4.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Doglas Kosta</h3><span>From Soylent</span></div></div></div></div><div data-index="13" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-5.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Anthony Lee</h3><span>From Initech</span></div></div></div></div><div data-index="14" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-6.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Jonathon Doe</h3><span>From Umbrella</span></div></div></div></div><div data-index="15" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-7.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Xenia Mell</h3><span>From Massive</span></div></div></div></div><div data-index="16" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-8.jpg" alt="" class="img-fluid rounded-circle"><div class="client-info"><h3>Shane Catson</h3><span>From Capital</span></div></div></div></div><div data-index="17" tabindex="-1" class="slick-slide slick-cloned" aria-hidden="true" style="width: 110px;"><div><div tabindex="-1" style="width:100%;display:inline-block"><img src="/naxos_assets/client-9.jpg" alt="3" class="img-fluid rounded-circle"><div class="client-info"><h3>Chris Wort</h3><span>From Sylhost</span></div></div></div></div></div></div></div></div></div></div></div></section><section id="overview" class="bg-grey"><div class="container"><div class="row"><div class="col-12 col-lg-6 offset-lg-1 order-lg-last res-margin col"><div class="section-title text-center text-lg-start"><h3>Track Time From Anywhere</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. </p></div><div class="overview-item"><div class="overview-box d-flex flex-wrap"><div class="icon icon-basic-compass"></div><div class="content"><h6 class="font-weight-bold mb-2 mt-0">Easy to Use</h6><p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur</p></div></div><div class="overview-box d-flex flex-wrap"><div class="icon icon-basic-helm"></div><div class="content"><h6 class="font-weight-bold mb-2 mt-0">Monitor &amp; Manage</h6><p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur</p></div></div><div class="overview-box d-flex flex-wrap"><div class="icon icon-basic-link"></div><div class="content"><h6 class="font-weight-bold mb-2 mt-0">Stay Connected</h6><p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur</p></div></div></div></div><div class="col-12 col-lg-5 order-lg-first text-sm-center col"><img src="/naxos_assets/track-time.png" alt=""></div></div><div class="empty-100"></div><div class="row"><div class="col-12 col-lg-6 res-margin col"><div class="section-title text-center text-lg-start"><h3>Built For Your Daily Schedule</h3><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. </p></div><ul class="overview-list"><li><p><i class="fa-li fas fa-check"></i> Ut fringilla est at nunc suscipit dictum. Nulla facilisi. Phasellus dignissim nibh eget imperdiet venenatis.</p></li><li><p><i class="fa-li fas fa-check"></i> Nullam egestas tincidunt lectus, sagittis eros vestibulum in. Vestibulum finibus iaculis sagittis. Suspendisse viverra luctus.</p></li><li><p><i class="fa-li fas fa-check"></i> Suspendisse at volutpat magna, vitae mattis metus. Integer posuere eu erat at pharetra. Aliquam ut pharetra diam.</p></li><li><p><i class="fa-li fas fa-check"></i> Donec luctus, sem vel molestie efficitur, metus libero mollis neque, sed scelerisque arcu nisl eu lectus.</p></li><li><p><i class="fa-li fas fa-check"></i> Fusce neque magna, fringilla ac vulputate at, venenatis a eros. Donec accumsan commodo tortor sed fringilla.</p></li></ul><p class="text-center text-lg-start"><a href="https://naxos-nextjs.vercel.app/video#" class="btn">Learn More</a></p></div><div class="col-12 col-lg-5 offset-lg-1 text-sm-center col"><img src="/naxos_assets/daily-schedule.png" alt=""></div></div></div></section><section id="counters" class="parallax" data-image="/images/parallax/counters.jpg" style="background-image: url(&quot;/images/parallax/counters.jpg&quot;);"><div class="overlay"></div><div class="container"><div class="row"><div class="col-12 col-md-6 col-lg-3 col"><div class="counter wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0" style="visibility: visible; animation-duration: 1s;"><div class="icon icon-basic-download"></div><div class="counter-content res-margin"><h5><span class="number-count">2,067</span></h5><p>Total Downloads</p></div></div></div><div class="col-12 col-md-6 col-lg-3 col"><div class="counter wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.3s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.3s;"><div class="icon icon-ecommerce-bag-plus"></div><div class="counter-content res-margin"><h5><span class="number-count">982</span></h5><p>Happy Clients</p></div></div></div><div class="col-12 col-md-6 col-lg-3 col"><div class="counter wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.6s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.6s;"><div class="icon icon-basic-tablet"></div><div class="counter-content res-margin"><h5><span class="number-count">890</span></h5><p>Active Users</p></div></div></div><div class="col-12 col-md-6 col-lg-3 col"><div class="counter wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.9s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.9s;"><div class="icon icon-basic-star"></div><div class="counter-content"><h5><span class="number-count">537</span></h5><p>App Rates</p></div></div></div></div></div></section><section id="screenshots" class="bg-grey"><div class="container"><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center"><h3>App Screenshots</h3><p>Morbi velit leo, sodales in purus eu, pretium accumsan nunc. Praesent eu diam ut ante consequat euismod.</p></div></div></div><div class="row"><div class="col-12 col"><div><div class="swiper swiper-initialized swiper-horizontal screenshot-slider zoom-screenshot swiper-backface-hidden"><div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-994.5px, 0px, 0px);"><div class="swiper-slide item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-1.jpg"><img src="/naxos_assets/screenshot-1.jpg" alt="" srl_elementid="0"></a></div><div class="swiper-slide item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-2.jpg"><img src="/naxos_assets/screenshot-2.jpg" alt="" srl_elementid="1"></a></div><div class="swiper-slide swiper-slide-prev item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-3.jpg"><img src="/naxos_assets/screenshot-3.jpg" alt="" srl_elementid="2"></a></div><div class="swiper-slide swiper-slide-active item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-4.jpg"><img src="/naxos_assets/screenshot-4.jpg" alt="" srl_elementid="3"></a></div><div class="swiper-slide swiper-slide-next item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-5.jpg"><img src="/naxos_assets/screenshot-5.jpg" alt="" srl_elementid="4"></a></div><div class="swiper-slide item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-6.jpg"><img src="/naxos_assets/screenshot-6.jpg" alt="" srl_elementid="5"></a></div><div class="swiper-slide item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-7.jpg"><img src="/naxos_assets/screenshot-7.jpg" alt="" srl_elementid="6"></a></div><div class="swiper-slide item" style="width: 301.5px; margin-right: 30px;"><a href="/naxos_assets/screenshot-8.jpg"><img src="/naxos_assets/screenshot-8.jpg" alt="" srl_elementid="7"></a></div></div><div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span></div></div></div></div></div></div></section><section id="support"><div class="container"><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center"><h3>Frequently Asked Questions</h3><p>Cras fringilla, lectus sed ullamcorper fringilla. Massa ex accumsan odio, quis iaculis justo magna quis tortor.</p></div></div></div><div class="row"><div class="col-12 col-lg-10 offset-lg-1 col"><div class="accordion accordion-flush"><div class="accordion-item"><h5 class="accordion-header"><button type="button" aria-expanded="true" class="accordion-button">Can I see Naxos in action before purchasing it?</button></h5><div class="accordion-collapse collapse show"><div class="accordion-body"><p>Nam erat orci, dictum eu iaculis a, scelerisque commodo risus. Mauris eu egestas ipsum. In hac habitasse platea dictumst. Duis in consequat est. Sed feugiat, ante in finibus ullamcorper, felis sem porta orci, sed pretium nibh nunc a tellus.</p></div></div></div><div class="accordion-item"><h5 class="accordion-header"><button type="button" aria-expanded="false" class="accordion-button collapsed">I've got older Mac. Is Naxos compatible with it?</button></h5><div class="accordion-collapse collapse"><div class="accordion-body"><p>Nam erat orci, dictum eu iaculis a, scelerisque commodo risus. Mauris eu egestas ipsum. In hac habitasse platea dictumst. Duis in consequat est. Sed feugiat, ante in finibus ullamcorper, felis sem porta orci, sed pretium nibh nunc a tellus.</p></div></div></div><div class="accordion-item"><h5 class="accordion-header"><button type="button" aria-expanded="false" class="accordion-button collapsed">What are the requirements for using Naxos?</button></h5><div class="accordion-collapse collapse"><div class="accordion-body"><p>Nam erat orci, dictum eu iaculis a, scelerisque commodo risus. Mauris eu egestas ipsum. In hac habitasse platea dictumst. Duis in consequat est. Sed feugiat, ante in finibus ullamcorper, felis sem porta orci, sed pretium nibh nunc a tellus.</p></div></div></div><div class="accordion-item"><h5 class="accordion-header"><button type="button" aria-expanded="false" class="accordion-button collapsed">How does Naxos handle my privacy?</button></h5><div class="accordion-collapse collapse"><div class="accordion-body"><p>Nam erat orci, dictum eu iaculis a, scelerisque commodo risus. Mauris eu egestas ipsum. In hac habitasse platea dictumst. Duis in consequat est. Sed feugiat, ante in finibus ullamcorper, felis sem porta orci, sed pretium nibh nunc a tellus.</p></div></div></div><div class="accordion-item"><h5 class="accordion-header"><button type="button" aria-expanded="false" class="accordion-button collapsed">What is Naxos privacy policy?</button></h5><div class="accordion-collapse collapse"><div class="accordion-body"><p>Nam erat orci, dictum eu iaculis a, scelerisque commodo risus. Mauris eu egestas ipsum. In hac habitasse platea dictumst. Duis in consequat est. Sed feugiat, ante in finibus ullamcorper, felis sem porta orci, sed pretium nibh nunc a tellus.</p></div></div></div></div></div></div><div class="empty-30"></div><div class="row"><div class="col-12 col"><p class="text-center mb-0">Still have a question? <a href="https://naxos-nextjs.vercel.app/video#contact"><strong>Ask your question here</strong></a></p></div></div></div></section><section id="subscribe" class="parallax" data-image="/images/parallax/subscribe.jpg" style="background-image: url(&quot;/images/parallax/subscribe.jpg&quot;);"><div class="overlay"></div><div class="container"><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center white"><h3 class="text-white">Subscribe To Newsletter</h3><p>Vivamus ornare feugiat orci eu faucibus. Phasellus nulla arcu, pharetra nec laoreet in, scelerisque a lectus.</p></div></div></div><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><form id="#subscribe-form"><div class="input-group mb-3"><input type="email" name="email" class="form-control field-subscribe" placeholder="Enter Your Email Address" value=""></div><button type="submit" class="btn w-100">Subscribe</button></form><div class="empty-30"></div><p class="text-center mb-0">We don't share your personal information with anyone or company. Check out our <a href="https://naxos-nextjs.vercel.app/video#"><strong>Privacy Policy</strong></a> for more information.</p></div></div></div></section><section id="blog"><div class="container"><div class="justify-content-center row"><div class="col-12 col-md-10 col-lg-6 col"><div class="section-title text-center"><h3>Latest Blog Posts</h3><p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere ipsum dolor sit amet, consectetur elit.</p></div></div></div><div class="blog-home row"><div class="col-12 col-lg-4 res-margin col"><div class="blog-col"><p><a href="https://naxos-nextjs.vercel.app/blog-post"><img src="/naxos_assets/post-1.jpg" class="blog-img" alt=""></a><span class="blog-category">Photography</span></p><div class="blog-wrapper"><div class="blog-text"><p class="blog-about"><span>Matthew Johns</span><span>January 14, 2024</span></p><h4><a href="https://naxos-nextjs.vercel.app/blog-post">Assorted Color Buildings and Sea in Riomaggiore</a></h4><p>Quisque dui at erat auctor pulvinar nisl felis, gravida et aliquam vitae, aliquet quis nibh.<a href="https://naxos-nextjs.vercel.app/blog-post" class="btn-read-more">Read More</a></p></div></div></div></div><div class="col-12 col-lg-4 res-margin col"><div class="blog-col"><p><a href="https://naxos-nextjs.vercel.app/blog-post"><img src="/naxos_assets/post-2.jpg" class="blog-img" alt=""></a><span class="blog-category">Lifestyle</span></p><div class="blog-wrapper"><div class="blog-text"><p class="blog-about"><span>Alex Wesly</span><span>December 30, 2023</span></p><h4><a href="https://naxos-nextjs.vercel.app/blog-post">Aerial Photography of Snowy Mountain Ranges</a></h4><p>Quisque dui at erat auctor pulvinar nisl felis, gravida et aliquam vitae, aliquet quis nibh.<a href="https://naxos-nextjs.vercel.app/blog-post" class="btn-read-more">Read More</a></p></div></div></div></div><div class="col-12 col-lg-4 col"><div class="blog-col"><p><a href="https://naxos-nextjs.vercel.app/blog-post"><img src="/naxos_assets/post-3.jpg" class="blog-img" alt=""></a><span class="blog-category">Development</span></p><div class="blog-wrapper"><div class="blog-text"><p class="blog-about"><span>Richard Jackson</span><span>February 12, 2022</span></p><h4><a href="https://naxos-nextjs.vercel.app/blog-post">Forest Highway With Green Leaves</a></h4><p>Quisque dui at erat auctor pulvinar nisl felis, gravida et aliquam vitae, aliquet quis nibh.<a href="https://naxos-nextjs.vercel.app/blog-post" class="btn-read-more">Read More</a></p></div></div></div></div></div></div></section><section id="clients" class="section-box bg-grey"><div class="container"><div class="row"><div class="swiper swiper-initialized swiper-horizontal clients-slider swiper-backface-hidden"><div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-272px, 0px, 0px);"><div class="swiper-slide swiper-slide-prev client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-1.png" alt="Client 1"></a></div><div class="swiper-slide swiper-slide-active client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-2.png" alt="Client 2"></a></div><div class="swiper-slide swiper-slide-next client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-3.png" alt="Client 3"></a></div><div class="swiper-slide client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-4.png" alt="Client 4"></a></div><div class="swiper-slide client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-5.png" alt="Client 5"></a></div><div class="swiper-slide client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-6.png" alt="Client 6"></a></div><div class="swiper-slide client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-7.png" alt="Client 7"></a></div><div class="swiper-slide client" style="width: 232px; margin-right: 40px;"><a href="https://naxos-nextjs.vercel.app/video#"><img src="/naxos_assets/company-8.png" alt="Client 8"></a></div></div></div></div></div></section><footer><div class="footer-widgets"><div class="container"><div class="row"><div class="col-12 col-md-6 col-lg-3 res-margin col"><div class="widget"><p class="footer-logo"><img src="/naxos_assets/logo-white.png" alt="Naxos" data-rjs="2"></p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis non, fugit totam vel laboriosam vitae.</p><div class="footer-social"><a href="https://naxos-nextjs.vercel.app/video#" title="Twitter"><i class="fab fa-twitter fa-fw"></i></a><a href="https://naxos-nextjs.vercel.app/video#" title="Facebook"><i class="fab fa-facebook-f fa-fw"></i></a><a href="https://naxos-nextjs.vercel.app/video#" title="Instagram"><i class="fab fa-instagram"></i></a><a href="https://naxos-nextjs.vercel.app/video#" title="Dribbble"><i class="fab fa-dribbble"></i></a><a href="https://naxos-nextjs.vercel.app/video#" title="Pinterest"><i class="fab fa-pinterest fa-fw"></i></a></div></div></div><div class="col-12 col-md-6 col-lg-2 offset-lg-1 res-margin col"><div class="widget"><h6>Useful Links</h6><ul class="footer-menu"><li><a href="https://naxos-nextjs.vercel.app/video#">Support</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Privacy Policy</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Terms &amp; Conditions</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Affiliate Program</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Careers</a></li></ul></div></div><div class="col-12 col-md-6 col-lg-3 res-margin col"><div class="widget"><h6>Product Help</h6><ul class="footer-menu"><li><a href="https://naxos-nextjs.vercel.app/video#">FAQ</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Reviews</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Features</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">Feedback</a></li><li><a href="https://naxos-nextjs.vercel.app/video#">API</a></li></ul></div></div><div class="col-12 col-md-6 col-lg-3 col"><div class="widget"><h6>Download</h6><div class="button-store"><a href="https://naxos-nextjs.vercel.app/video#" class="custom-btn d-inline-flex align-items-center m-2 m-sm-0 mb-sm-3"><i class="fab fa-google-play"></i><p>Available on<span>Google Play</span></p></a><a href="https://naxos-nextjs.vercel.app/video#" class="custom-btn d-inline-flex align-items-center m-2 m-sm-0"><i class="fab fa-apple"></i><p>Download on<span>App Store</span></p></a></div></div></div></div></div></div><div class="footer-copyright"><div class="container"><div class="row"><div class="col-12 col"><p class="copyright text-center">Copyright © 2024 <a href="https://naxos-nextjs.vercel.app/video#" target="_blank">Naxos</a>. All Rights Reserved.</p></div></div></div></div></footer><a href="https://naxos-nextjs.vercel.app/video#top-page" class="to-top"><div class="icon icon-arrows-up"></div></a></div>` }} />
-        </>
-    );
+  return (
+    <div>
+      {/* Page loader (hidden) */}
+      <div className="page-loader" style={{ display: 'none' }}>
+        <div className="progress" />
+      </div>
+
+      {/* ── Header / Navbar ─────────────────────────────────────── */}
+      <header id="top-page" className="header">
+        <div id="mainNav" className="main-menu-area animated">
+          <div className="container">
+            <div className="align-items-center row">
+              {/* Logo */}
+              <div className="col-12 col-lg-2 d-flex justify-content-between align-items-center col">
+                <div className="logo">
+                  <a className="navbar-brand navbar-brand1" href="/">
+                    <Image src="/naxos_assets/logo-white.png" alt="Naxos" width={120} height={40} priority />
+                  </a>
+                  <a className="navbar-brand navbar-brand2" href="/">
+                    <Image src="/naxos_assets/logo.png" alt="Naxos" width={120} height={40} priority />
+                  </a>
+                </div>
+                {/* Hamburger */}
+                <div className="menu-bar d-lg-none" role="button" tabIndex={0} aria-label="Open menu">
+                  <span /><span /><span />
+                </div>
+              </div>
+
+              {/* Menu */}
+              <div className="op-mobile-menu col-lg-10 p-0 d-lg-flex align-items-center justify-content-end">
+                <div className="m-menu-header d-flex justify-content-between align-items-center d-lg-none">
+                  <a href="/" className="logo">
+                    <Image src="/naxos_assets/logo.png" alt="Naxos" width={100} height={35} />
+                  </a>
+                  <span className="close-button" role="button" tabIndex={0} aria-label="Close menu" />
+                </div>
+                <ul className="nav-menu d-lg-flex flex-wrap list-unstyled justify-content-center">
+                  {navLinks.map((link) => (
+                    <li key={link.href} className="nav-item">
+                      <a className="nav-link js-scroll-trigger" href={link.href}>
+                        <span>{link.label}</span>
+                      </a>
+                    </li>
+                  ))}
+                  <li className="nav-item search-option">
+                    <a className="nav-link" href="#" aria-label="Search">
+                      <i className="fas fa-search" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Search overlay */}
+      <div className="search-wrapper">
+        <form role="search" method="get" className="search-form" action="#">
+          <input type="search" name="s" id="search-input" placeholder="Search Keyword" className="searchbox-input" autoComplete="off" required />
+          <span>Input your search keywords and press Enter.</span>
+        </form>
+        <div className="search-wrapper-close">
+          <span className="search-close-btn" role="button" tabIndex={0} aria-label="Close search" />
+        </div>
+      </div>
+
+      {/* ── Hero / Banner ───────────────────────────────────────── */}
+      <section id="home" className="banner video-bg bottom-oval">
+        <div className="video-bg">
+          <iframe
+            frameBorder="0"
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            title="Naxos Hero Video"
+            width="100%"
+            height="100%"
+            src="/naxos_assets/mqEeWiRwv0k.html"
+            id="widget2"
+          />
+        </div>
+        <div className="container">
+          <div className="align-items-center row">
+            <div className="col-12 col-lg-6 offset-lg-3 col">
+              <div className="banner-text text-center">
+                <h1 className="wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0s">
+                  Made for better
+                </h1>
+                <p className="wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.3s">
+                  Best landing for your App showcase. Follow other investors, discover companies to believe in.
+                </p>
+                <div className="button-store wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.6s">
+                  <a href="#" className="d-inline-flex align-items-center m-2 m-sm-0 me-sm-3" aria-label="Get on Google Play">
+                    <Image src="/naxos_assets/google-play.png" alt="Google Play" width={150} height={50} />
+                  </a>
+                  <a href="#" className="d-inline-flex align-items-center m-2 m-sm-0" aria-label="Download on App Store">
+                    <Image src="/naxos_assets/app-store.png" alt="App Store" width={150} height={50} />
+                  </a>
+                </div>
+              </div>
+              <div className="empty-30" />
+            </div>
+          </div>
+        </div>
+        <div className="banner-image-center w-100 wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0.3s">
+          <Image src="/naxos_assets/video-welcome.png" alt="App Preview" width={1200} height={600} style={{ width: '100%', height: 'auto' }} />
+        </div>
+      </section>
+
+      {/* ── Features ────────────────────────────────────────────── */}
+      <section id="features" className="bg-grey">
+        <div className="container">
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center">
+                <h3>Awesome Features</h3>
+                <p>Sed laoreet diam sagittis tempus convallis. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
+              </div>
+            </div>
+          </div>
+          <div className="d-flex align-items-center row">
+            {/* Left features */}
+            <div className="col-12 col-md-6 col-lg-4 col">
+              <ul className="features-item">
+                {featuresLeft.map((f) => (
+                  <li key={f.title}>
+                    <div className="feature-box d-flex box-left">
+                      <div className="box-icon"><div className={`icon ${f.icon}`} /></div>
+                      <div className="box-text align-self-center align-self-md-start">
+                        <h4>{f.title}</h4>
+                        <p>{f.desc}</p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Center image */}
+            <div className="col-12 col-lg-4 d-none d-lg-block col">
+              <div className="features-thumb text-center">
+                <Image src="/naxos_assets/awesome-features.png" alt="Features" width={300} height={500} style={{ maxWidth: '100%', height: 'auto' }} />
+              </div>
+            </div>
+            {/* Right features */}
+            <div className="col-12 col-md-6 col-lg-4 col">
+              <ul className="features-item">
+                {featuresRight.map((f) => (
+                  <li key={f.title}>
+                    <div className="feature-box d-flex">
+                      <div className="box-icon"><div className={`icon ${f.icon}`} /></div>
+                      <div className="box-text align-self-center align-self-md-start">
+                        <h4>{f.title}</h4>
+                        <p>{f.desc}</p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works ────────────────────────────────────────── */}
+      <section id="services">
+        <div className="container">
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center">
+                <h3>How It Works?</h3>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo justo. Nullam dictum felis eu pede mollis pretium.</p>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            {services.map((s) => (
+              <div key={s.title} className="col-12 col-lg-4 res-margin wow fadeInUp col" data-wow-offset="10" data-wow-duration="1s" data-wow-delay={s.delay}>
+                <div className="service-single">
+                  <div className={`icon ${s.icon}`} />
+                  <h5>{s.title}</h5>
+                  <p>{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Parallax Video ──────────────────────────────────────── */}
+      <section
+        id="parallax-video"
+        className="parallax"
+        data-image="/images/parallax/video.jpg"
+        style={{ backgroundImage: 'url("/images/parallax/video.jpg")' }}
+      >
+        <div className="overlay" />
+        <div className="container">
+          <div className="row">
+            <div className="video-btn wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay="0s">
+              <a href="#" data-rel="lightcase" className="play-btn" aria-label="Watch video">
+                <i className="fas fa-play" />
+              </a>
+              <span className="video-text">Watch This Video</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ────────────────────────────────────────── */}
+      <section id="testimonials">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center">
+                <h3>Client Reviews</h3>
+                <p>Donec purus est, tincidunt eu sodales quis, vehicula quis enim. Morbi dapibus, tellus a gravida faucibus, elit ipsum.</p>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 testimonial-carousel col">
+              <div className="block-text row">
+                <div className="col-12 col-lg-8 offset-lg-2">
+                  {/* Static display — show all cards in a grid without JS slider */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                    {testimonials.map((t, i) => (
+                      <div key={i} className="single-box" style={{ padding: '24px', background: '#f8f9fa', borderRadius: '12px' }}>
+                        <p>
+                          <i className="fas fa-quote-left" /> {t.text} <i className="fas fa-quote-right" />
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}>
+                          <Image src={t.img} alt={t.name} width={50} height={50} style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                          <div>
+                            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600 }}>{t.name}</h3>
+                            <span style={{ fontSize: '12px', color: '#888' }}>{t.company}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Overview ────────────────────────────────────────────── */}
+      <section id="overview" className="bg-grey">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-lg-6 offset-lg-1 order-lg-last res-margin col">
+              <div className="section-title text-center text-lg-start">
+                <h3>Track Time From Anywhere</h3>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.</p>
+              </div>
+              <div className="overview-item">
+                {overviewBoxes.map((box) => (
+                  <div key={box.title} className="overview-box d-flex flex-wrap">
+                    <div className={`icon ${box.icon}`} />
+                    <div className="content">
+                      <h6 className="font-weight-bold mb-2 mt-0">{box.title}</h6>
+                      <p>{box.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="col-12 col-lg-5 order-lg-first text-sm-center col">
+              <Image src="/naxos_assets/track-time.png" alt="Track Time" width={400} height={500} style={{ maxWidth: '100%', height: 'auto' }} />
+            </div>
+          </div>
+
+          <div className="empty-100" />
+
+          <div className="row">
+            <div className="col-12 col-lg-6 res-margin col">
+              <div className="section-title text-center text-lg-start">
+                <h3>Built For Your Daily Schedule</h3>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.</p>
+              </div>
+              <ul className="overview-list">
+                {checklistItems.map((item, i) => (
+                  <li key={i}>
+                    <p><i className="fa-li fas fa-check" /> {item}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-center text-lg-start">
+                <a href="#" className="btn">Learn More</a>
+              </p>
+            </div>
+            <div className="col-12 col-lg-5 offset-lg-1 text-sm-center col">
+              <Image src="/naxos_assets/daily-schedule.png" alt="Daily Schedule" width={400} height={480} style={{ maxWidth: '100%', height: 'auto' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Counters ────────────────────────────────────────────── */}
+      <section
+        id="counters"
+        className="parallax"
+        data-image="/images/parallax/counters.jpg"
+        style={{ backgroundImage: 'url("/images/parallax/counters.jpg")' }}
+      >
+        <div className="overlay" />
+        <div className="container">
+          <div className="row">
+            {counters.map((c) => (
+              <div key={c.label} className="col-12 col-md-6 col-lg-3 col">
+                <div className="counter wow fadeInUp" data-wow-offset="10" data-wow-duration="1s" data-wow-delay={c.delay}>
+                  <div className={`icon ${c.icon}`} />
+                  <div className="counter-content res-margin">
+                    <h5><span className="number-count">{c.count}</span></h5>
+                    <p>{c.label}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── App Screenshots ─────────────────────────────────────── */}
+      <section id="screenshots" className="bg-grey">
+        <div className="container">
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center">
+                <h3>App Screenshots</h3>
+                <p>Morbi velit leo, sodales in purus eu, pretium accumsan nunc. Praesent eu diam ut ante consequat euismod.</p>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 col">
+              <div className="screenshot-slider" style={{ overflowX: 'auto', paddingBottom: '16px' }}>
+                <div style={{ display: 'flex', gap: '20px', width: 'max-content' }}>
+                  {screenshots.map((src, i) => (
+                    <a key={i} href={src} style={{ flexShrink: 0 }}>
+                      <Image src={src} alt={`Screenshot ${i + 1}`} width={220} height={400} style={{ borderRadius: '12px', display: 'block' }} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ─────────────────────────────────────────────────── */}
+      <section id="support">
+        <div className="container">
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center">
+                <h3>Frequently Asked Questions</h3>
+                <p>Cras fringilla, lectus sed ullamcorper fringilla. Massa ex accumsan odio, quis iaculis justo magna quis tortor.</p>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 col-lg-10 offset-lg-1 col">
+              <div className="accordion accordion-flush">
+                {faqs.map((faq, i) => (
+                  <div key={i} className="accordion-item">
+                    <h5 className="accordion-header">
+                      <button type="button" aria-expanded={faq.open} className={`accordion-button${faq.open ? '' : ' collapsed'}`}>
+                        {faq.q}
+                      </button>
+                    </h5>
+                    <div className={`accordion-collapse collapse${faq.open ? ' show' : ''}`}>
+                      <div className="accordion-body">
+                        <p>{faqAnswer}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="empty-30" />
+          <div className="row">
+            <div className="col-12 col">
+              <p className="text-center mb-0">
+                Still have a question? <a href="#"><strong>Ask your question here</strong></a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Subscribe ───────────────────────────────────────────── */}
+      <section
+        id="subscribe"
+        className="parallax"
+        data-image="/images/parallax/subscribe.jpg"
+        style={{ backgroundImage: 'url("/images/parallax/subscribe.jpg")' }}
+      >
+        <div className="overlay" />
+        <div className="container">
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center white">
+                <h3 className="text-white">Subscribe To Newsletter</h3>
+                <p>Vivamus ornare feugiat orci eu faucibus. Phasellus nulla arcu, pharetra nec laoreet in, scelerisque a lectus.</p>
+              </div>
+            </div>
+          </div>
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <form id="subscribe-form">
+                <div className="input-group mb-3">
+                  <input type="email" name="email" className="form-control field-subscribe" placeholder="Enter Your Email Address" />
+                </div>
+                <button type="submit" className="btn w-100">Subscribe</button>
+              </form>
+              <div className="empty-30" />
+              <p className="text-center mb-0">
+                We don&apos;t share your personal information with anyone or company. Check out our{' '}
+                <a href="#"><strong>Privacy Policy</strong></a> for more information.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Blog ────────────────────────────────────────────────── */}
+      <section id="blog">
+        <div className="container">
+          <div className="justify-content-center row">
+            <div className="col-12 col-md-10 col-lg-6 col">
+              <div className="section-title text-center">
+                <h3>Latest Blog Posts</h3>
+                <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere ipsum dolor sit amet, consectetur elit.</p>
+              </div>
+            </div>
+          </div>
+          <div className="blog-home row">
+            {posts.map((post) => (
+              <div key={post.title} className="col-12 col-lg-4 res-margin col">
+                <div className="blog-col">
+                  <p>
+                    <a href="/blog-post">
+                      <Image src={post.img} className="blog-img" alt={post.title} width={400} height={250} style={{ width: '100%', height: 'auto' }} />
+                    </a>
+                    <span className="blog-category">{post.category}</span>
+                  </p>
+                  <div className="blog-wrapper">
+                    <div className="blog-text">
+                      <p className="blog-about">
+                        <span>{post.author}</span><span>{post.date}</span>
+                      </p>
+                      <h4><a href="/blog-post">{post.title}</a></h4>
+                      <p>
+                        Quisque dui at erat auctor pulvinar nisl felis, gravida et aliquam vitae, aliquet quis nibh.
+                        <a href="/blog-post" className="btn-read-more">Read More</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Clients ─────────────────────────────────────────────── */}
+      <section id="clients" className="section-box bg-grey">
+        <div className="container">
+          <div className="row justify-content-center align-items-center" style={{ gap: '30px', flexWrap: 'wrap' }}>
+            {clients.map((c) => (
+              <div key={c.alt} style={{ flex: '0 0 auto' }}>
+                <a href="#">
+                  <Image src={c.img} alt={c.alt} width={120} height={60} style={{ maxWidth: '120px', height: 'auto', filter: 'grayscale(1)', opacity: 0.7 }} />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ──────────────────────────────────────────────── */}
+      <footer>
+        <div className="footer-widgets">
+          <div className="container">
+            <div className="row">
+              {/* Brand */}
+              <div className="col-12 col-md-6 col-lg-3 res-margin col">
+                <div className="widget">
+                  <p className="footer-logo">
+                    <Image src="/naxos_assets/logo-white.png" alt="Naxos" width={120} height={40} />
+                  </p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis non, fugit totam vel laboriosam vitae.</p>
+                  <div className="footer-social">
+                    {[['fa-twitter', 'Twitter'], ['fa-facebook-f', 'Facebook'], ['fa-instagram', 'Instagram'], ['fa-dribbble', 'Dribbble'], ['fa-pinterest', 'Pinterest']].map(([cls, label]) => (
+                      <a key={label} href="#" title={label} aria-label={label}>
+                        <i className={`fab ${cls} fa-fw`} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {/* Useful Links */}
+              <div className="col-12 col-md-6 col-lg-2 offset-lg-1 res-margin col">
+                <div className="widget">
+                  <h6>Useful Links</h6>
+                  <ul className="footer-menu">
+                    {usefulLinks.map((l) => <li key={l}><a href="#">{l}</a></li>)}
+                  </ul>
+                </div>
+              </div>
+              {/* Product Help */}
+              <div className="col-12 col-md-6 col-lg-3 res-margin col">
+                <div className="widget">
+                  <h6>Product Help</h6>
+                  <ul className="footer-menu">
+                    {productLinks.map((l) => <li key={l}><a href="#">{l}</a></li>)}
+                  </ul>
+                </div>
+              </div>
+              {/* Download */}
+              <div className="col-12 col-md-6 col-lg-3 col">
+                <div className="widget">
+                  <h6>Download</h6>
+                  <div className="button-store">
+                    <a href="#" className="custom-btn d-inline-flex align-items-center m-2 m-sm-0 mb-sm-3">
+                      <i className="fab fa-google-play" />
+                      <p>Available on<span>Google Play</span></p>
+                    </a>
+                    <a href="#" className="custom-btn d-inline-flex align-items-center m-2 m-sm-0">
+                      <i className="fab fa-apple" />
+                      <p>Download on<span>App Store</span></p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="footer-copyright">
+          <div className="container">
+            <div className="row">
+              <div className="col-12 col">
+                <p className="copyright text-center">
+                  Copyright &copy; 2024 <a href="#" target="_blank" rel="noreferrer">Naxos</a>. All Rights Reserved.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* ── Back to Top ─────────────────────────────────────────── */}
+      <a href="#top-page" className="to-top" aria-label="Back to top">
+        <div className="icon icon-arrows-up" />
+      </a>
+    </div>
+  );
 }

@@ -1,24 +1,30 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import "./globals.css";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-  weight: ["400", "500", "600", "700", "800"],
-});
+import "./naxos.css";
 
 export const metadata: Metadata = {
-  title: "Bookme.com — Explore your place to stay",
-  description: "Find the best lodging accommodations worldwide.",
+  title: "Naxos — App Landing Page",
+  description: "Best landing for your App showcase. Follow other investors, discover companies to believe in.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={manrope.variable}>
-      <body className="min-h-full">{children}</body>
+    <html lang="en">
+      <head>
+        {/* Font Awesome */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
