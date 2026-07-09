@@ -9,8 +9,8 @@ void main() {
     const Environment(
       type: EnvType.dev,
       // Gunakan localhost (10.0.2.2 untuk emulator Android) atau IP lokal
-      apiBaseUrl: 'http://10.0.2.2:3000/api', 
-      wsBaseUrl: 'ws://10.0.2.2:3000/ws',
+      apiBaseUrl: 'https://bima-websocket.furqonaugust.site/api',
+      wsBaseUrl: 'wss://bima-websocket.furqonaugust.site',
     ),
   );
 

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../config/app_colors.dart';
+import '../viewmodels/dashboard_viewmodel.dart';
+import '../models/dashboard_summary_model.dart';
 import 'widgets/custom_app_bar.dart';
 import 'widgets/status_badge.dart';
 import 'widgets/metric_card.dart';
@@ -16,6 +20,13 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
 
+  String _formatTimer(int seconds) {
+    int h = seconds ~/ 3600;
+    int m = (seconds % 3600) ~/ 60;
+    int s = seconds % 60;
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,20 +36,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onMenuPressed: () {},
         onNotificationPressed: () {},
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16, bottom: 100), // padding bottom for nav bar
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildMachineStatusCard(context),
-            const SizedBox(height: 16),
-            _buildMetricGrid(context),
-            const SizedBox(height: 16),
-            _buildDailySummaryCard(context),
-            const SizedBox(height: 16),
-            _buildVisualContextImage(context),
-          ],
-        ),
+      body: Selector<DashboardViewModel, ({bool isLoading, String? errorMessage})>(
+        selector: (_, viewModel) => (isLoading: viewModel.isLoading, errorMessage: viewModel.errorMessage),
+        builder: (context, state, child) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.errorMessage != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Error: ${state.errorMessage}', style: const TextStyle(color: Colors.red)),
+                  ElevatedButton(
+                    onPressed: () => context.read<DashboardViewModel>().init(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 16, bottom: 100),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Selector<DashboardViewModel, ({bool isRunning, String deviceId, bool isWsConnected, DateTime? lastActive})>(
+                  selector: (_, viewModel) {
+                    final device = viewModel.currentDevice;
+                    return (
+                      isRunning: device?.statusApi ?? false,
+                      deviceId: device?.deviceId ?? 'Unknown',
+                      isWsConnected: viewModel.isWsConnected,
+                      lastActive: device?.lastActive,
+                    );
+                  },
+                  builder: (context, data, _) => _buildMachineStatusCard(
+                    context,
+                    isRunning: data.isRunning,
+                    deviceId: data.deviceId,
+                    isWsConnected: data.isWsConnected,
+                    lastActive: data.lastActive,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Selector<DashboardViewModel, ({double temp, int timer, bool isFireOn})>(
+                  selector: (_, viewModel) {
+                    final device = viewModel.currentDevice;
+                    return (
+                      temp: device?.temperature ?? 0.0,
+                      timer: device?.timer ?? 0,
+                      isFireOn: device?.statusApi ?? false,
+                    );
+                  },
+                  builder: (context, data, _) => _buildMetricGrid(
+                    context,
+                    isFireOn: data.isFireOn,
+                    temperature: data.temp,
+                    timer: data.timer,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Selector<DashboardViewModel, DashboardSummaryModel?>(
+                  selector: (_, viewModel) => viewModel.summary,
+                  builder: (context, summary, _) => _buildDailySummaryCard(context, summary),
+                ),
+                const SizedBox(height: 16),
+                _buildVisualContextImage(context),
+              ],
+            ),
+          );
+        },
       ),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: _currentIndex,
@@ -51,13 +121,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildMachineStatusCard(BuildContext context) {
+  Widget _buildMachineStatusCard(
+    BuildContext context, {
+    required bool isRunning,
+    required String deviceId,
+    required bool isWsConnected,
+    DateTime? lastActive,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: AppColors.primaryGreen, width: 4),
+          side: BorderSide(
+            color: isRunning ? AppColors.primaryGreen : AppColors.lightGrayStroke, 
+            width: 4
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -83,26 +162,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Container(
                             width: 12,
                             height: 12,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primaryGreen,
+                            decoration: BoxDecoration(
+                              color: isRunning ? AppColors.primaryGreen : Colors.grey,
                               shape: BoxShape.circle,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Running',
+                            isRunning ? 'Running' : 'Stopped',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const StatusBadge(
-                    text: 'Optimal',
-                    backgroundColor: AppColors.lightGreenBg,
-                    textColor: AppColors.darkGreenText,
-                    icon: Icons.check_circle_outline,
-                  ),
+                  if (isWsConnected)
+                    const StatusBadge(
+                      text: 'Live',
+                      backgroundColor: AppColors.lightGreenBg,
+                      textColor: AppColors.darkGreenText,
+                      icon: Icons.wifi,
+                    )
+                  else
+                    const StatusBadge(
+                      text: 'Offline',
+                      backgroundColor: Color(0xFFFFEBEE), // Light red
+                      textColor: Colors.red,
+                      icon: Icons.wifi_off,
+                    ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -116,15 +203,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Text('Machine ID', style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 4),
-                      Text('STEAM-V2-042', style: Theme.of(context).textTheme.titleLarge),
+                      Text(deviceId, style: Theme.of(context).textTheme.titleLarge),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('Active Since', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Last Active', style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 4),
-                      Text('08:15 AM', style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        lastActive != null 
+                          ? '${lastActive.hour.toString().padLeft(2,'0')}:${lastActive.minute.toString().padLeft(2,'0')}'
+                          : 'N/A', 
+                        style: Theme.of(context).textTheme.titleLarge
+                      ),
                     ],
                   ),
                 ],
@@ -136,7 +228,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildMetricGrid(BuildContext context) {
+  Widget _buildMetricGrid(
+    BuildContext context, {
+    required bool isFireOn,
+    required double temperature,
+    required int timer,
+  }) {
+    final timerString = _formatTimer(timer);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -161,11 +260,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Container(
                   width: 48,
                   height: 48,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightOrangeBg,
+                  decoration: BoxDecoration(
+                    color: isFireOn ? AppColors.lightOrangeBg : AppColors.lightGrayStroke.withValues(alpha: 0.3),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.local_fire_department, color: AppColors.orangeBrown),
+                  child: Icon(
+                    Icons.local_fire_department, 
+                    color: isFireOn ? AppColors.orangeBrown : AppColors.darkGrayNavIcon
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -173,9 +275,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Text('Fire Status', style: Theme.of(context).textTheme.bodyMedium),
                     Text(
-                      'ON',
+                      isFireOn ? 'ON' : 'OFF',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: AppColors.orangeBrown,
+                            color: isFireOn ? AppColors.orangeBrown : AppColors.darkGrayNavIcon,
                           ),
                     ),
                   ],
@@ -201,7 +303,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text('92', style: Theme.of(context).textTheme.displayLarge),
+                Text(temperature.toStringAsFixed(1), style: Theme.of(context).textTheme.displayLarge),
                 const SizedBox(width: 4),
                 Text('°C', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightGrayStroke)),
               ],
@@ -220,14 +322,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: const Icon(Icons.timer_outlined, color: AppColors.darkGreenStroke),
             ),
-            trailing: const StatusBadge(
-              text: 'In Progress',
-              backgroundColor: AppColors.lightGreenBg,
-              textColor: AppColors.primaryGreen,
-            ),
+            trailing: isFireOn 
+              ? const StatusBadge(
+                  text: 'In Progress',
+                  backgroundColor: AppColors.lightGreenBg,
+                  textColor: AppColors.primaryGreen,
+                )
+              : const SizedBox.shrink(),
             title: 'Elapsed Time',
             content: Text(
-              '01:45:32',
+              timerString,
               style: Theme.of(context).textTheme.displayMedium, // Mono font
             ),
           ),
@@ -236,7 +340,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildDailySummaryCard(BuildContext context) {
+  Widget _buildDailySummaryCard(BuildContext context, DashboardSummaryModel? summary) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
@@ -249,30 +353,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Daily Summary', style: Theme.of(context).textTheme.titleSmall),
-                  Text('Today, Oct 24', style: Theme.of(context).textTheme.bodyMedium),
+                  Text('Today', style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SummaryItem(
-                    value: '12',
-                    label: 'Total\nSessions',
+                  SummaryItem(
+                    value: summary?.totalDevices.toString() ?? '0',
+                    label: 'Total\nDevices',
                     valueColor: AppColors.blueTextStroke,
                   ),
                   const SizedBox(width: 12),
-                  const SummaryItem(
-                    value: '95°',
-                    label: 'Avg Temp',
+                  SummaryItem(
+                    value: summary?.onlineDevices.toString() ?? '0',
+                    label: 'Online',
                     valueColor: AppColors.darkGreenText,
                     hasBackground: true,
                   ),
                   const SizedBox(width: 12),
                   SummaryItem(
-                    value: '10',
-                    label: 'Cycles\nDone',
-                    valueColor: const Color(0xFF693C00), // Brown from Figma
+                    value: summary?.offlineDevices.toString() ?? '0',
+                    label: 'Offline',
+                    valueColor: const Color(0xFF693C00), 
                   ),
                 ],
               ),
@@ -305,7 +409,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           image: const DecorationImage(
-            image: NetworkImage('https://picsum.photos/400/200'),
+            image: CachedNetworkImageProvider('https://picsum.photos/400/200'),
             fit: BoxFit.cover,
           ),
           boxShadow: const [
