@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_theme.dart';
+import 'views/dashboard_screen.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -18,11 +19,7 @@ class MainApp extends StatelessWidget {
         title: 'Bima Steamlog',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: const Scaffold(
-          body: Center(child: Text('Bima Steamlog Mobile App')),
-        ),
+        home: const DashboardScreen(),
       ),
     );
   }
