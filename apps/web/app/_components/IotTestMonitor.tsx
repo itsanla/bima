@@ -72,23 +72,55 @@ export default function IotTestMonitor() {
     };
   }, []);
 
-  const renderTable = (title: string, data: IotData | null, color: string) => {
+  const renderTable = (title: string, data: IotData | null, colorClass: string, headerClass: string) => {
     if (!data) return null;
     return (
-      <div className="col-12 col-md-6 mb-4">
-        <div className={`card shadow-sm border-${color}`} style={{ borderRadius: '12px', overflow: 'hidden', border: `2px solid var(--bs-${color})` }}>
-          <div className={`card-header text-white font-weight-bold p-3`} style={{ backgroundColor: color === 'success' ? '#28a745' : '#007bff' }}>
-            <h5 className="mb-0 text-white m-0" style={{ fontSize: '18px' }}>{title}</h5>
+      <div className="w-full md:w-1/2 p-4">
+        <div className={`rounded-xl shadow-lg border-2 ${colorClass} overflow-hidden bg-white`}>
+          <div className={`p-4 ${headerClass} text-white font-bold text-lg`}>
+            {title}
           </div>
-          <div className="card-body p-0">
-            <table className="table table-striped table-hover mb-0">
-              <tbody>
-                <tr><th className="pl-3">Session ID</th><td>{data.sessionId || data.session}</td></tr>
-                <tr><th className="pl-3">Suhu</th><td><span className="badge bg-warning text-dark p-2" style={{ fontSize: '14px' }}>{data.suhu} &deg;C</span></td></tr>
-                <tr><th className="pl-3">Timer</th><td>{data.timer}</td></tr>
-                <tr><th className="pl-3">API Status</th><td>{data.api}</td></tr>
-                <tr><th className="pl-3">Mesin Status</th><td>{data.status}</td></tr>
-                <tr><th className="pl-3">Air Habis</th><td>{data.air_habis ? 'Ya ⚠️' : 'Tidak ✅'}</td></tr>
+          <div className="p-0">
+            <table className="w-full text-left border-collapse">
+              <tbody className="divide-y divide-gray-200">
+                <tr className="hover:bg-gray-50 transition-colors">
+                  <th className="py-3 px-4 font-semibold text-gray-700 w-1/3">Session ID</th>
+                  <td className="py-3 px-4 text-gray-600 break-all">{data.sessionId || data.session}</td>
+                </tr>
+                <tr className="hover:bg-gray-50 transition-colors">
+                  <th className="py-3 px-4 font-semibold text-gray-700">Suhu</th>
+                  <td className="py-3 px-4">
+                    <span className="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-bold shadow-sm">
+                      {data.suhu} &deg;C
+                    </span>
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50 transition-colors">
+                  <th className="py-3 px-4 font-semibold text-gray-700">Timer</th>
+                  <td className="py-3 px-4 text-gray-600">{data.timer}</td>
+                </tr>
+                <tr className="hover:bg-gray-50 transition-colors">
+                  <th className="py-3 px-4 font-semibold text-gray-700">API Status</th>
+                  <td className="py-3 px-4 text-gray-600">{data.api}</td>
+                </tr>
+                <tr className="hover:bg-gray-50 transition-colors">
+                  <th className="py-3 px-4 font-semibold text-gray-700">Mesin Status</th>
+                  <td className="py-3 px-4 text-gray-600">{data.status}</td>
+                </tr>
+                <tr className="hover:bg-gray-50 transition-colors">
+                  <th className="py-3 px-4 font-semibold text-gray-700">Air Habis</th>
+                  <td className="py-3 px-4">
+                    {data.air_habis ? (
+                      <span className="text-red-600 font-medium flex items-center gap-1">
+                        Ya <span className="text-xl">⚠️</span>
+                      </span>
+                    ) : (
+                      <span className="text-green-600 font-medium flex items-center gap-1">
+                        Tidak <span className="text-xl">✅</span>
+                      </span>
+                    )}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -98,36 +130,36 @@ export default function IotTestMonitor() {
   };
 
   return (
-    <section id="iot-test-monitor" className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
-      <div className="container mt-5">
-        <div className="row justify-content-center">
-          <div className="col-12 text-center mb-5">
-            <h2 className="mb-2 font-weight-bold" style={{ color: '#333' }}>📡 Live IoT Test Monitor</h2>
-            <p className="text-muted" style={{ fontSize: '16px' }}>
-              Status Koneksi Server: 
-              <span 
-                className={`badge ml-2 p-2 ${isConnected ? 'bg-success' : 'bg-danger'}`} 
-                style={{ marginLeft: '10px', color: 'white', borderRadius: '8px' }}
-              >
-                {isConnected ? 'TERHUBUNG' : 'TERPUTUS'}
-              </span>
-            </p>
-            <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '14px', color: '#666' }}>
-              Alat pengujian tim IoT. Tabel hanya akan muncul saat ada data masuk dan akan otomatis hilang jika tidak ada data baru dalam 10 detik terakhir.
-            </p>
+    <section className="w-full">
+      <div className="flex flex-col items-center">
+        <div className="text-center mb-10 mt-6 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-extrabold text-gray-800 mb-4 flex items-center justify-center gap-3">
+            <span className="text-4xl">📡</span> Live IoT Test Monitor
+          </h2>
+          <div className="flex items-center justify-center gap-3 mb-4 text-lg">
+            <span className="text-gray-600 font-medium">Status Koneksi Server:</span>
+            <span 
+              className={`px-4 py-1 rounded-full text-white font-bold text-sm shadow-sm transition-colors duration-300 ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}
+            >
+              {isConnected ? 'TERHUBUNG' : 'TERPUTUS'}
+            </span>
           </div>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            Alat pengujian tim IoT. Tabel hanya akan muncul saat ada data masuk dan akan otomatis hilang jika tidak ada data baru dalam 10 detik terakhir.
+          </p>
         </div>
-        <div className="row justify-content-center">
+
+        <div className="flex flex-wrap justify-center w-full max-w-5xl">
           {!wsData && !httpData ? (
-             <div className="col-12 text-center text-muted my-5">
-               <i className="fas fa-spinner fa-spin fa-3x mb-3" style={{ opacity: 0.3 }}></i>
-               <h5>Menunggu data dari alat IoT...</h5>
+             <div className="w-full text-center py-16 flex flex-col items-center animate-pulse">
+               <div className="w-16 h-16 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+               <h5 className="text-xl text-gray-500 font-medium">Menunggu data dari alat IoT...</h5>
              </div>
           ) : (
-             <>
-               {renderTable('🟢 Live Data (WebSocket)', wsData, 'success')}
-               {renderTable('🔵 Live Data (HTTP POST)', httpData, 'primary')}
-             </>
+             <div className="flex flex-col md:flex-row w-full justify-center gap-4">
+               {renderTable('🟢 Live Data (WebSocket)', wsData, 'border-green-500', 'bg-green-600')}
+               {renderTable('🔵 Live Data (HTTP POST)', httpData, 'border-blue-500', 'bg-blue-600')}
+             </div>
           )}
         </div>
       </div>
