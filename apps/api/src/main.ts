@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 // Create HTTP server
 const server = createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('WebSocket server is running');
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ status: "ok", message: "Bima API and WebSocket server is running" }));
 });
 
 // Initialize WebSocket server attached to the HTTP server

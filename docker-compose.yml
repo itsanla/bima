@@ -1,0 +1,47 @@
+services:
+  bima-postgres:
+    image: postgres:15-alpine
+    container_name: bima-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: bima
+      POSTGRES_PASSWORD: bimapassword
+      POSTGRES_DB: bima_db
+    ports:
+      - "54322:5432"
+    volumes:
+      - bima_postgres_data:/var/lib/postgresql/data
+    networks:
+      - bima-net
+
+  bima-backend:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: itsanla/bima:1.0.0
+    container_name: bima-backend
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - NODE_ENV=production
+      - PORT=8081
+      - DATABASE_URL=postgresql://bima:bimapassword@bima-postgres:5432/bima_db?schema=public&sslmode=disable
+    networks:
+      - bima-net
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bima-api.rule=Host(`api.steamlog.cloud`)"
+      - "traefik.http.services.bima-api.loadbalancer.server.port=8081"
+      - "traefik.http.routers.bima-api.tls.certresolver=letsencrypt"
+    depends_on:
+      - bima-postgres
+
+volumes:
+  bima_postgres_data:
+
+networks:
+  bima-net:
+  coolify:
+    external: true
