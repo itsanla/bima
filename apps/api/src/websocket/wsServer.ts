@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import logger from 'jet-logger';
+import prisma from '../db/prisma';
 
 interface IExtWebSocket extends WebSocket {
   isAlive: boolean;
@@ -22,7 +23,7 @@ class WsServer {
         extWs.isAlive = true;
       });
 
-      extWs.on('message', (message: Buffer | string) => {
+      extWs.on('message', async (message: Buffer | string) => {
         try {
           const parsed = JSON.parse(message.toString()) as Record<string, unknown>;
           const messageType = typeof parsed.type === 'string' ? parsed.type : 'device_update';
@@ -31,6 +32,21 @@ class WsServer {
             const { type, ...payload } = parsed;
             
             logger.info(`[WebSocket] Received device_update: ${JSON.stringify(payload)}`);
+
+            try {
+              await prisma.iotLog.create({
+                data: {
+                  deviceId: payload.id ? String(payload.id) : null,
+                  suhu: Number(payload.suhu) || 0,
+                  timer: typeof payload.timer === 'string' ? payload.timer : "00:00:00",
+                  api: typeof payload.api === 'string' ? payload.api : "OFF",
+                  status: typeof payload.status === 'string' ? payload.status : "UNKNOWN",
+                  air_habis: Boolean(payload.air_habis)
+                }
+              });
+            } catch (dbErr: any) {
+              logger.err(`[WebSocket] DB Error: ${dbErr.message}`);
+            }
 
             extWs.send(JSON.stringify({
               type: 'ack',

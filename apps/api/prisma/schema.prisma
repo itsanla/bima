@@ -17,3 +17,14 @@ model Device {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model IotLog {
+  id        String   @id @default(uuid())
+  deviceId  String?
+  suhu      Float
+  timer     String
+  api       String
+  status    String
+  air_habis Boolean
+  createdAt DateTime @default(now())
+}
