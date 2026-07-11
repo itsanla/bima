@@ -24,7 +24,8 @@ Digunakan oleh alat IoT (sebagai alternatif jika tidak ingin menggunakan WebSock
   "air_habis": false
 }
 ```
-*(Catatan: Atribut `session` dapat juga dikirim menggunakan nama `id` demi menjaga kompatibilitas dengan firmware lama).*
+*(Catatan 1: Nilai `"session"` **wajib menggunakan Unix Timestamp** (waktu dalam detik) yang diambil satu kali saat alat IoT baru dihidupkan melalui NTP Server Publik, misal: `pool.ntp.org`. Nilai ini harus dipertahankan sama persis selama sesi pengukusan itu berlangsung.)*
+*(Catatan 2: Atribut `"session"` dapat juga dikirim menggunakan nama `"id"` demi menjaga kompatibilitas dengan firmware lama).*
 
 **Contoh Request (CURL):**
 ```bash
