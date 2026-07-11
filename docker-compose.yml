@@ -38,6 +38,19 @@ services:
     depends_on:
       - bima-postgres
 
+  bima-pgweb:
+    image: sosedoff/pgweb
+    container_name: bima-pgweb
+    restart: always
+    environment:
+      - DATABASE_URL=postgres://bima:bimapassword@bima-postgres:5432/bima_db?sslmode=disable
+    ports:
+      - "8082:8081"
+    networks:
+      - bima-net
+    depends_on:
+      - bima-postgres
+
 volumes:
   bima_postgres_data:
 
