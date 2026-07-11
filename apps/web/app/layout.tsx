@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./naxos.css";
 
 export const metadata: Metadata = {
   title: "Naxos — App Landing Page",

@@ -1,0 +1,238 @@
+/* Naxos Template CSS is loaded via <link> tags in layout.tsx */
+
+/* =========================================
+   NAXOS – Global CSS overrides & fixes
+   for Next.js App Router
+   ========================================= */
+
+/* Reset margin/padding injected by globals.css that might conflict */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  background: #ffffff;
+  color: #444444;
+  overflow-x: hidden;
+}
+
+/* Ensure the page fills height correctly */
+html,
+body {
+  min-height: 100%;
+}
+
+/* ---- Navbar ---- */
+.main-menu-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Sticky nav on scroll — class added via JS */
+.main-menu-area.sticky {
+  background: #fff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* ---- Banner ---- */
+#home.banner {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---- Parallax sections — fix for SSR static backgrounds ---- */
+.parallax {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.parallax .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.parallax .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Slick Carousel — visible static state ---- */
+.slick-list {
+  overflow: hidden;
+}
+
+.slick-track {
+  display: flex;
+}
+
+.slick-slide {
+  float: left;
+  min-height: 1px;
+}
+
+/* Testimonial slider — show only first item statically */
+.testimonial-slider .slick-slide:not(.slick-active) {
+  display: none;
+}
+
+/* Carousel images — keep visible */
+.testimonial-nav .slick-slide:not(.slick-cloned) {
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ---- Screenshot Swiper ---- */
+.screenshot-slider .swiper-wrapper {
+  display: flex;
+  gap: 30px;
+}
+
+.screenshot-slider .swiper-slide {
+  flex-shrink: 0;
+  width: 280px;
+}
+
+.screenshot-slider .swiper-slide img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+/* ---- Clients Swiper ---- */
+.clients-slider .swiper-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.clients-slider .swiper-slide {
+  flex-shrink: 0;
+}
+
+.clients-slider .swiper-slide img {
+  max-width: 120px;
+  filter: grayscale(1);
+  opacity: 0.7;
+  transition: filter 0.3s, opacity 0.3s;
+}
+
+.clients-slider .swiper-slide img:hover {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* ---- Accordion ---- */
+.accordion-item {
+  border: 1px solid #e9ecef;
+  border-radius: 8px !important;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.accordion-button {
+  width: 100%;
+  text-align: left;
+  background: #f8f9fa;
+  border: none;
+  padding: 16px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.accordion-button:hover {
+  background: #eef0f2;
+}
+
+.accordion-collapse.collapse {
+  display: none;
+}
+
+.accordion-collapse.collapse.show {
+  display: block;
+}
+
+.accordion-body {
+  padding: 16px 20px;
+  color: #666;
+  line-height: 1.7;
+}
+
+/* ---- To-Top Button ---- */
+.to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 45px;
+  height: 45px;
+  background: var(--color-primary, #5b6dca);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+  text-decoration: none;
+}
+
+.to-top:hover {
+  opacity: 1;
+}
+
+/* ---- Page loader hide ---- */
+.page-loader {
+  display: none !important;
+}
+
+/* ---- Footer ---- */
+footer {
+  background: #1a1a2e;
+  color: #aaa;
+}
+
+footer h6 {
+  color: #fff;
+  margin-bottom: 16px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+footer a {
+  color: #aaa;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: #fff;
+}
+
+.footer-copyright {
+  background: #11111f;
+  padding: 18px 0;
+}
+
+.footer-copyright p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ---- WOW animation fallback — show elements even without JS ---- */
+.wow {
+  visibility: visible !important;
+}
