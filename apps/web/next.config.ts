@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     // Allow unoptimized for local template assets to avoid layout shifts
     unoptimized: false,
   },
+  output: "standalone",
 };
 
 export default nextConfig;
