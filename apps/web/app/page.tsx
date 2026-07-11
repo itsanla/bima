@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import IotTestMonitor from './_components/IotTestMonitor';
 
 export const metadata: Metadata = {
   title: 'Naxos — App Landing Page',
@@ -207,6 +208,9 @@ export default function NaxosPage() {
           <Image src="/naxos_assets/video-welcome.png" alt="App Preview" width={1200} height={600} style={{ width: '100%', height: 'auto' }} />
         </div>
       </section>
+
+      {/* ── Live IoT Test Monitor ───────────────────────────────── */}
+      <IotTestMonitor />
 
       {/* ── Features ────────────────────────────────────────────── */}
       <section id="features" className="bg-grey">
