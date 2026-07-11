@@ -59,6 +59,28 @@ services:
     depends_on:
       - bima-postgres
 
+  bima-frontend:
+    build:
+      context: apps/web
+      dockerfile: Dockerfile
+    image: itsanla/bima-fe:latest
+    container_name: bima-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://api.steamlog.cloud
+    networks:
+      - bima-net
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.routers.bima-frontend.rule=Host(`steamlog.cloud`)"
+      - "traefik.http.services.bima-frontend.loadbalancer.server.port=3000"
+      - "traefik.http.routers.bima-frontend.tls.certresolver=letsencrypt"
+
 volumes:
   bima_postgres_data:
 
