@@ -2,11 +2,8 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm config set ignore-scripts false && pnpm install
+COPY package.json package-lock.json* ./
+RUN npm install
 
 COPY . .
 
@@ -14,18 +11,15 @@ COPY . .
 RUN npx prisma generate
 
 # Build TypeScript
-RUN pnpm run build
+RUN npm run build
 
 FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml* ./
+COPY --from=builder /app/package.json /app/package-lock.json* ./
 # Install only production dependencies
-RUN pnpm config set ignore-scripts false && pnpm install --prod
+RUN npm install --omit=dev
 
 # Copy Prisma schema and generate client (or copy from builder)
 COPY --from=builder /app/prisma ./prisma
@@ -36,4 +30,4 @@ RUN npx prisma generate
 COPY --from=builder /app/dist ./dist
 
 # Start server
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
