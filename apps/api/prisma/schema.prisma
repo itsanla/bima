@@ -22,7 +22,7 @@ model Device {
 
 model IotLog {
   id        String   @id @default(uuid())
-  deviceId  String?
+  sessionId String?
   suhu      Float
   timer     String
   api       String

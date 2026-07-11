@@ -11,7 +11,10 @@ const PORT = process.env.PORT || 3000;
 
 // Create HTTP server
 const server = createServer(async (req, res) => {
-  if (req.method === 'POST') {
+  const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+  const pathname = url.pathname;
+
+  if (req.method === 'POST' && (pathname === '/api' || pathname === '/')) {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });
     req.on('end', async () => {
@@ -19,7 +22,7 @@ const server = createServer(async (req, res) => {
         const data = JSON.parse(body);
         const log = await prisma.iotLog.create({
           data: {
-            deviceId: data.id ? String(data.id) : null,
+            sessionId: (data.session || data.id) ? String(data.session || data.id) : null,
             suhu: Number(data.suhu) || 0,
             timer: data.timer || "00:00:00",
             api: data.api || "OFF",
@@ -35,6 +38,53 @@ const server = createServer(async (req, res) => {
         res.end(JSON.stringify({ status: "error", message: e.message }));
       }
     });
+    return;
+  }
+
+  if (req.method === 'GET' && (pathname === '/api' || pathname === '/api/logs')) {
+    try {
+      const page = Number(url.searchParams.get('page')) || 1;
+      const limit = 10;
+      const skip = (page - 1) * limit;
+      
+      const search = url.searchParams.get('search') || undefined;
+      const sortBy = url.searchParams.get('sortBy') || 'createdAt';
+      const sortOrder = url.searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
+
+      const where = search ? {
+        OR: [
+          { sessionId: { contains: search, mode: 'insensitive' as const } },
+          { api: { contains: search, mode: 'insensitive' as const } },
+          { status: { contains: search, mode: 'insensitive' as const } }
+        ]
+      } : {};
+
+      const [logs, total] = await Promise.all([
+        prisma.iotLog.findMany({
+          where,
+          take: limit,
+          skip,
+          orderBy: { [sortBy]: sortOrder }
+        }),
+        prisma.iotLog.count({ where })
+      ]);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ 
+        status: "ok", 
+        data: logs,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit)
+        }
+      }));
+    } catch (e: any) {
+      logger.err(`[HTTP] Error processing GET: ${e.message}`);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: "error", message: e.message }));
+    }
     return;
   }
 
