@@ -36,7 +36,7 @@ class WsServer {
             try {
               await prisma.iotLog.create({
                 data: {
-                  deviceId: payload.id ? String(payload.id) : null,
+                  sessionId: (payload.session || payload.id) ? String(payload.session || payload.id) : null,
                   suhu: Number(payload.suhu) || 0,
                   timer: typeof payload.timer === 'string' ? payload.timer : "00:00:00",
                   api: typeof payload.api === 'string' ? payload.api : "OFF",
