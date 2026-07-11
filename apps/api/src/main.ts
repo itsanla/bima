@@ -72,17 +72,24 @@ const server = createServer(async (req, res) => {
     req.on('data', chunk => { body += chunk.toString(); });
     req.on('end', async () => {
       try {
-        const data = JSON.parse(body);
+        const payload = JSON.parse(body);
         const log = await prisma.iotLog.create({
           data: {
-            sessionId: (data.session || data.id) ? String(data.session || data.id) : null,
-            suhu: Number(data.suhu) || 0,
-            timer: data.timer || "00:00:00",
-            api: data.api || "OFF",
-            status: data.status || "UNKNOWN",
-            air_habis: Boolean(data.air_habis)
+            sessionId: (payload.session || payload.id) ? String(payload.session || payload.id) : null,
+            suhu: Number(payload.suhu) || 0,
+            timer: payload.timer || "00:00:00",
+            api: payload.api || "OFF",
+            status: payload.status || "UNKNOWN",
+            air_habis: Boolean(payload.air_habis)
           }
         });
+
+        // Broadcast the HTTP-received data to all WS clients for the UI testing table
+        wsServer.broadcastToDashboard({
+          type: 'http_dashboard_update',
+          data: log
+        });
+
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: "ok", message: "Data saved successfully", data: log }));
       } catch (e: any) {
