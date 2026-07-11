@@ -16,7 +16,7 @@ Digunakan oleh alat IoT (sebagai alternatif jika tidak ingin menggunakan WebSock
 **Body Payload:**
 ```json
 {
-  "session": "sesi-pengukusan-1",
+  "session": "1720703810",
   "suhu": 29.5,
   "timer": "00:10:00",
   "api": "ON",
@@ -30,7 +30,7 @@ Digunakan oleh alat IoT (sebagai alternatif jika tidak ingin menggunakan WebSock
 ```bash
 curl -X POST https://api.steamlog.cloud/api \
   -H "Content-Type: application/json" \
-  -d '{"session": "sesi-1", "suhu": 30.1, "timer": "00:00:10", "api": "ON", "status": "RUNNING", "air_habis": false}'
+  -d '{"session": "1720703810", "suhu": 30.1, "timer": "00:00:10", "api": "ON", "status": "RUNNING", "air_habis": false}'
 ```
 
 ---
@@ -61,7 +61,7 @@ Digunakan HANYA oleh pustaka grafik (*Chart Library*) di Aplikasi Mobile untuk m
 `GET https://api.steamlog.cloud/api/logs/chart`
 
 **Query Parameters:**
-- `sessionId` (Wajib): ID sesi pengukusan yang ingin di-_render_ grafiknya (contoh: `sesi-1`).
+- `sessionId` (Wajib): ID sesi pengukusan yang ingin di-_render_ grafiknya (contoh: `1720703810`).
 - `interval` (Opsional): Tingkat kerapatan data. (Default: `10m`)
   - `10m` -> Merangkum rata-rata suhu per 10 menit (Direkomendasikan untuk melihat grafik sesi 3 - 7 jam).
   - `1h` -> Merangkum rata-rata suhu per 1 jam (Direkomendasikan jika ingin melihat rentang 1 hari).
@@ -69,7 +69,7 @@ Digunakan HANYA oleh pustaka grafik (*Chart Library*) di Aplikasi Mobile untuk m
 
 **Contoh Request:**
 ```
-https://api.steamlog.cloud/api/logs/chart?sessionId=sesi-1&interval=10m
+https://api.steamlog.cloud/api/logs/chart?sessionId=1720703810&interval=10m
 ```
 
 **Contoh Output:**
@@ -99,7 +99,7 @@ Saat alat IoT mengirimkan data ini, *backend* akan **secara otomatis** menyimpan
 ```json
 {
   "type": "device_update",
-  "session": "sesi-1",
+  "session": "1720703810",
   "suhu": 85.5,
   "timer": "01:30:00",
   "api": "ON",
@@ -116,7 +116,7 @@ Aplikasi pemantau hanya perlu melakukan koneksi ke WSS dan menunggu secara pasif
 {
   "type": "dashboard_update",
   "data": {
-    "session": "sesi-1",
+    "session": "1720703810",
     "suhu": 85.5,
     "timer": "01:30:00",
     "api": "ON",
@@ -133,7 +133,7 @@ node -e "
 const WebSocket = require('ws');
 const ws = new WebSocket('wss://api.steamlog.cloud/');
 ws.on('open', () => {
-  ws.send(JSON.stringify({ type: 'device_update', session: 'test-sesi', suhu: 55, api: 'ON' }));
+  ws.send(JSON.stringify({ type: 'device_update', session: '1720703810', suhu: 55, api: 'ON' }));
 });
 ws.on('message', data => console.log('Diterima:', data.toString()));
 "
