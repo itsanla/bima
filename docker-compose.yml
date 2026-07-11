@@ -16,8 +16,8 @@ services:
 
   bima-backend:
     build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+      context: apps/api
+      dockerfile: Dockerfile
     image: itsanla/bima:1.0.0
     container_name: bima-backend
     restart: always
