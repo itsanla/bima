@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: bima-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: bima
+      POSTGRES_PASSWORD: bimapassword
+      POSTGRES_DB: bima_db
+    ports:
+      - "54322:5432"
+    volumes:
+      - bima-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  bima-postgres-data:

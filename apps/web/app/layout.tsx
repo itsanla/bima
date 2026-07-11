@@ -17,6 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Naxos Template CSS — served from public/ folder, not imported via CSS @import */}
+        <link rel="stylesheet" href="/naxos_assets/e44bc1ceb6ea6728.css" />
+        <link rel="stylesheet" href="/naxos_assets/73e628e842813242.css" />
+        <link rel="stylesheet" href="/naxos_assets/red.css" />
+        <link rel="stylesheet" href="/naxos_assets/www-player.css" />
         {/* Font Awesome */}
         <link
           rel="stylesheet"

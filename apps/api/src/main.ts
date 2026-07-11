@@ -1,24 +1,24 @@
+import dotenv from 'dotenv';
+import { createServer } from 'http';
 import logger from 'jet-logger';
 
-import EnvVars from './common/constants/env';
-import server from './server';
+import wsServer from './websocket/wsServer';
 
-/******************************************************************************
-                                Constants
-******************************************************************************/
+dotenv.config({ path: process.env.DOTENV_CONFIG_PATH || '.env' });
 
-const SERVER_START_MESSAGE =
-  'Express server started on port: ' + EnvVars.Port.toString();
+const PORT = process.env.PORT || 3000;
 
-/******************************************************************************
-                                  Run
-******************************************************************************/
+// Create HTTP server
+const server = createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('WebSocket server is running');
+});
 
-// Start the server
-server.listen(EnvVars.Port, (err) => {
-  if (!!err) {
-    logger.err(err.message);
-  } else {
-    logger.info(SERVER_START_MESSAGE);
-  }
+// Initialize WebSocket server attached to the HTTP server
+wsServer.initialize(server);
+
+// Start server
+server.listen(PORT, () => {
+  logger.info(`[Server] Running on http://0.0.0.0:${PORT}`);
+  logger.info(`[WebSocket] Listening on ws://0.0.0.0:${PORT}`);
 });

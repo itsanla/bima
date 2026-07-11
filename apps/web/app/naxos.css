@@ -1,8 +1,4 @@
-/* Naxos Template CSS imports */
-@import url('/naxos_assets/e44bc1ceb6ea6728.css');
-@import url('/naxos_assets/73e628e842813242.css');
-@import url('/naxos_assets/red.css');
-@import url('/naxos_assets/www-player.css');
+/* Naxos Template CSS is loaded via <link> tags in layout.tsx */
 
 /* =========================================
    NAXOS – Global CSS overrides & fixes
