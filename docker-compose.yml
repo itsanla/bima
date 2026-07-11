@@ -48,6 +48,12 @@ services:
       - "8082:8081"
     networks:
       - bima-net
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bima-pgweb.rule=Host(`db.steamlog.cloud`)"
+      - "traefik.http.services.bima-pgweb.loadbalancer.server.port=8081"
+      - "traefik.http.routers.bima-pgweb.tls.certresolver=letsencrypt"
     depends_on:
       - bima-postgres
 
