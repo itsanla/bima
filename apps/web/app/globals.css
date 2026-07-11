@@ -1,5 +1,5 @@
+@import "tailwindcss";
 /* Global baseline — shared across the whole app */
-
 :root {
   --primary: #252525;
   --dark: #1d1d1d;
