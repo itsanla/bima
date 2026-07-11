@@ -6,7 +6,7 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install
+RUN pnpm config set ignore-scripts false && pnpm install
 
 COPY . .
 
@@ -25,7 +25,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml* ./
 # Install only production dependencies
-RUN pnpm install --prod
+RUN pnpm config set ignore-scripts false && pnpm install --prod
 
 # Copy Prisma schema and generate client (or copy from builder)
 COPY --from=builder /app/prisma ./prisma
