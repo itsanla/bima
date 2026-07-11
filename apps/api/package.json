@@ -2,7 +2,7 @@
   "name": "api",
   "version": "0.0.0",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.prod.json",
     "clean-install": "rm -rf ./node_modules && rm -r package-lock.json && npm i",
     "dev:basic": "cross-env DOTENV_CONFIG_PATH=./config/.env.development ts-node ./src/main",
     "dev:watch": "nodemon --exec \"npm run dev:basic\" --watch ./src --ext .ts",
