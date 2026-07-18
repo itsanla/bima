@@ -27,6 +27,7 @@ services:
       - NODE_ENV=production
       - PORT=8081
       - DATABASE_URL=postgresql://bima:bimapassword@bima-postgres:5432/bima_db?schema=public&sslmode=disable
+      - IOT_LOG_FLUSH_INTERVAL_MS=30000
     networks:
       - bima-net
       - coolify

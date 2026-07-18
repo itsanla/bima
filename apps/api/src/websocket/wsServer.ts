@@ -12,6 +12,7 @@ class WsServer {
   private pingInterval: NodeJS.Timeout | null = null;
   private persistInterval: NodeJS.Timeout | null = null;
   private pendingLogs: Map<string | null, Record<string, unknown>> = new Map();
+  private readonly logFlushIntervalMs = Number(process.env.IOT_LOG_FLUSH_INTERVAL_MS) || 30000;
 
   public initialize(server: Server): void {
     this.wss = new WebSocketServer({ server });
@@ -84,7 +85,7 @@ class WsServer {
 
     this.persistInterval = setInterval(() => {
       this.flushPendingLogs();
-    }, 30000);
+    }, this.logFlushIntervalMs);
 
     this.wss.on('close', () => {
       if (this.pingInterval) {
