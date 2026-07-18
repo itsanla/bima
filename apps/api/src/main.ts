@@ -106,33 +106,32 @@ const server = createServer(async (req, res) => {
       const page = Number(url.searchParams.get('page')) || 1;
       const limit = 10;
       const skip = (page - 1) * limit;
-      
-      const search = url.searchParams.get('search') || undefined;
-      const sortBy = url.searchParams.get('sortBy') || 'createdAt';
-      const sortOrder = url.searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
 
-      const where = search ? {
-        OR: [
-          { sessionId: { contains: search, mode: 'insensitive' as const } },
-          { api: { contains: search, mode: 'insensitive' as const } },
-          { status: { contains: search, mode: 'insensitive' as const } }
-        ]
-      } : {};
+      const search = url.searchParams.get('search') || null;
+      const sortBy = url.searchParams.get('sortBy') === 'sessionId' ? 'sessionId' : 'createdAt';
+      const sortOrder = url.searchParams.get('sortOrder') === 'asc' ? 'ASC' : 'DESC';
+      const searchPattern = search ? `%${search}%` : null;
 
-      const [logs, total] = await Promise.all([
-        prisma.iotLog.findMany({
-          where,
-          take: limit,
-          skip,
-          orderBy: { [sortBy]: sortOrder }
-        }),
-        prisma.iotLog.count({ where })
-      ]);
+      const orderByClause = sortBy === 'sessionId'
+        ? `"sessionId" ${sortOrder}`
+        : `MIN("createdAt") ${sortOrder}`;
+
+      const sessions: any[] = await prisma.$queryRawUnsafe(`
+        SELECT "sessionId", MIN("createdAt") as "createdAt", COUNT(*) OVER() as "totalSessions"
+        FROM "IotLog"
+        WHERE $1::text IS NULL OR "sessionId" ILIKE $1
+        GROUP BY "sessionId"
+        ORDER BY ${orderByClause}
+        LIMIT $2 OFFSET $3
+      `, searchPattern, limit, skip);
+
+      const total = sessions.length > 0 ? Number(sessions[0].totalSessions) : 0;
+      const data = sessions.map(s => ({ sessionId: s.sessionId, createdAt: s.createdAt }));
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ 
-        status: "ok", 
-        data: logs,
+      res.end(JSON.stringify({
+        status: "ok",
+        data,
         pagination: {
           page,
           limit,
@@ -189,6 +188,39 @@ const server = createServer(async (req, res) => {
       res.end(JSON.stringify({ status: "ok", data }));
     } catch (e: any) {
       logger.err(`[HTTP] Error processing GET chart: ${e.message}`);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: "error", message: e.message }));
+    }
+    return;
+  }
+
+  const logsDetailMatch = req.method === 'GET' ? pathname.match(/^\/api\/logs\/([^/]+)$/) : null;
+  if (logsDetailMatch) {
+    try {
+      const sessionId = decodeURIComponent(logsDetailMatch[1]);
+
+      const history = await prisma.iotLog.findMany({
+        where: { sessionId },
+        orderBy: { createdAt: 'asc' }
+      });
+
+      if (history.length === 0) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: "error", message: "Session not found" }));
+        return;
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        status: "ok",
+        data: {
+          sessionId,
+          history,
+          createdAt: history[0].createdAt
+        }
+      }));
+    } catch (e: any) {
+      logger.err(`[HTTP] Error processing GET session detail: ${e.message}`);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: "error", message: e.message }));
     }

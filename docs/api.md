@@ -40,26 +40,84 @@ curl -X POST https://api.steamlog.cloud/api \
 
 ---
 
-## 2. HTTP GET: Mengambil Riwayat Logs (Tabel)
-Digunakan oleh Aplikasi Mobile atau Web Dashboard untuk menampilkan tabel riwayat log dengan dukungan *pagination* (halaman), *search* (pencarian), dan *sorting* (pengurutan).
+## 2. HTTP GET: Mengambil Daftar Sesi (Tabel)
+Digunakan oleh Aplikasi Mobile atau Web Dashboard untuk menampilkan tabel daftar sesi pengukusan, dikelompokkan per `sessionId` (bukan lagi per baris log mentah), dengan dukungan *pagination*, *search*, dan *sorting*.
 
 **Endpoint:** 
 `GET https://api.steamlog.cloud/api/logs`
 
 **Query Parameters (Opsional):**
 - `page` : Nomor halaman (Default: 1, dengan limit 10 baris per halaman)
-- `search` : Mencari kata kunci pada kolom `sessionId`, `api`, dan `status`. (Contoh: `ON` atau `ERROR`)
-- `sortBy` : Kolom yang ingin diurutkan. (Contoh: `suhu`, `createdAt`, `status`. Default: `createdAt`)
+- `search` : Mencari kata kunci pada kolom `sessionId`. (Contoh: `1720703810`)
+- `sortBy` : Kolom yang ingin diurutkan. (`createdAt` atau `sessionId`. Default: `createdAt`)
 - `sortOrder` : Arah urutan. (`asc` = menaik, `desc` = menurun. Default: `desc`)
+
+`createdAt` pada tiap baris menunjukkan waktu log pertama yang tercatat untuk sesi tersebut (awal sesi).
 
 **Contoh Request:**
 ```
-https://api.steamlog.cloud/api/logs?page=1&search=RUNNING&sortBy=suhu&sortOrder=desc
+https://api.steamlog.cloud/api/logs?page=1&search=1720703810&sortBy=createdAt&sortOrder=desc
+```
+
+**Contoh Output:**
+```json
+{
+  "status": "ok",
+  "data": [
+    {
+      "sessionId": "1",
+      "createdAt": "2026-07-14T16:36:45.063Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 2113,
+    "totalPages": 212
+  }
+}
 ```
 
 ---
 
-## 3. HTTP GET: Mengambil Data Grafik Mobile (Chart Summary)
+## 3. HTTP GET: Mengambil Riwayat Log per Sesi
+Digunakan untuk menampilkan seluruh riwayat log mentah dari satu sesi pengukusan tertentu, misalnya saat sesi pada tabel daftar sesi (endpoint di atas) diklik.
+
+**Endpoint:** 
+`GET https://api.steamlog.cloud/api/logs/<sessionId>`
+
+**Contoh Request:**
+```
+https://api.steamlog.cloud/api/logs/1784046853
+```
+
+**Contoh Output:**
+```json
+{
+  "status": "ok",
+  "data": {
+    "sessionId": "1784046853",
+    "history": [
+      {
+        "id": "972ed34c-9509-4df9-8fe3-7e38f6e296f5",
+        "suhu": 29.8,
+        "timer": "00:00:00",
+        "api": "OFF",
+        "status": "READY",
+        "air_habis": false,
+        "createdAt": "2026-07-14T16:36:44.054Z"
+      }
+    ],
+    "createdAt": "2026-07-14T16:36:44.054Z"
+  }
+}
+```
+
+Jika `sessionId` tidak ditemukan, respons berupa HTTP 404 dengan `{"status": "error", "message": "Session not found"}`.
+
+---
+
+## 4. HTTP GET: Mengambil Data Grafik Mobile (Chart Summary)
 Digunakan HANYA oleh pustaka grafik (*Chart Library*) di Aplikasi Mobile untuk mendapatkan data *downsampled* (dirangkum) secara instan, sehingga HP tidak _hang_ saat merender ribuan titik.
 
 **Endpoint:** 
@@ -91,7 +149,7 @@ https://api.steamlog.cloud/api/logs/chart?sessionId=1720703810&interval=10m
 
 ---
 
-## 4. WebSocket (WSS): Komunikasi Real-time (Alat IoT & Dashboard)
+## 5. WebSocket (WSS): Komunikasi Real-time (Alat IoT & Dashboard)
 Digunakan untuk komunikasi dua arah *real-time* yang cepat antara alat pengukus dan aplikasi pemantau tanpa delay.
 
 **Endpoint (Secure/Modern):** 
