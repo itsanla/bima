@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../config/app_colors.dart';
 import '../viewmodels/dashboard_viewmodel.dart';
 import '../models/dashboard_summary_model.dart';
@@ -8,33 +7,15 @@ import 'widgets/custom_app_bar.dart';
 import 'widgets/status_badge.dart';
 import 'widgets/metric_card.dart';
 import 'widgets/summary_item.dart';
-import 'widgets/custom_bottom_nav.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
-
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
-  int _currentIndex = 0;
-
-  String _formatTimer(int seconds) {
-    int h = seconds ~/ 3600;
-    int m = (seconds % 3600) ~/ 60;
-    int s = seconds % 60;
-    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Monitoring Alat Kukusan',
-        hasNotification: true,
-        onMenuPressed: () {},
-        onNotificationPressed: () {},
       ),
       body: Selector<DashboardViewModel, ({bool isLoading, String? errorMessage})>(
         selector: (_, viewModel) => (isLoading: viewModel.isLoading, errorMessage: viewModel.errorMessage),
@@ -67,8 +48,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   selector: (_, viewModel) {
                     final device = viewModel.currentDevice;
                     return (
-                      isRunning: device?.statusApi ?? false,
-                      deviceId: device?.deviceId ?? 'Unknown',
+                      isRunning: device?.api == 'ON',
+                      deviceId: device?.session ?? 'Unknown',
                       isWsConnected: viewModel.isWsConnected,
                       lastActive: device?.lastActive,
                     );
@@ -82,13 +63,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Selector<DashboardViewModel, ({double temp, int timer, bool isFireOn})>(
+                Selector<DashboardViewModel, ({double temp, String timer, bool isFireOn})>(
                   selector: (_, viewModel) {
                     final device = viewModel.currentDevice;
                     return (
-                      temp: device?.temperature ?? 0.0,
-                      timer: device?.timer ?? 0,
-                      isFireOn: device?.statusApi ?? false,
+                      temp: device?.suhu ?? 0.0,
+                      timer: device?.timer ?? '00:00:00',
+                      isFireOn: device?.api == 'ON',
                     );
                   },
                   builder: (context, data, _) => _buildMetricGrid(
@@ -108,14 +89,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           );
-        },
-      ),
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
         },
       ),
     );
@@ -151,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'CURRENT STATUS',
+                        'STATUS SAAT INI',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               letterSpacing: 0.05,
                             ),
@@ -169,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            isRunning ? 'Running' : 'Stopped',
+                            isRunning ? 'Berjalan' : 'Berhenti',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
@@ -178,14 +151,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   if (isWsConnected)
                     const StatusBadge(
-                      text: 'Live',
+                      text: 'Aktif',
                       backgroundColor: AppColors.lightGreenBg,
                       textColor: AppColors.darkGreenText,
                       icon: Icons.wifi,
                     )
                   else
                     const StatusBadge(
-                      text: 'Offline',
+                      text: 'Luring',
                       backgroundColor: Color(0xFFFFEBEE), // Light red
                       textColor: Colors.red,
                       icon: Icons.wifi_off,
@@ -201,7 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Machine ID', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('ID Mesin', style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 4),
                       Text(deviceId, style: Theme.of(context).textTheme.titleLarge),
                     ],
@@ -209,7 +182,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('Last Active', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Terakhir Aktif', style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 4),
                       Text(
                         lastActive != null 
@@ -232,10 +205,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     BuildContext context, {
     required bool isFireOn,
     required double temperature,
-    required int timer,
+    required String timer,
   }) {
-    final timerString = _formatTimer(timer);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -273,9 +244,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Fire Status', style: Theme.of(context).textTheme.bodyMedium),
+                    Text('Status Api', style: Theme.of(context).textTheme.bodyMedium),
                     Text(
-                      isFireOn ? 'ON' : 'OFF',
+                      isFireOn ? 'NYALA' : 'MATI',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: isFireOn ? AppColors.orangeBrown : AppColors.darkGrayNavIcon,
                           ),
@@ -298,7 +269,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: const Icon(Icons.thermostat, color: AppColors.blueTextStroke),
             ),
-            title: 'Current Temperature',
+            title: 'Suhu Saat Ini',
             content: Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
@@ -324,14 +295,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             trailing: isFireOn 
               ? const StatusBadge(
-                  text: 'In Progress',
+                  text: 'Berjalan',
                   backgroundColor: AppColors.lightGreenBg,
                   textColor: AppColors.primaryGreen,
                 )
               : const SizedBox.shrink(),
-            title: 'Elapsed Time',
+            title: 'Waktu Berjalan',
             content: Text(
-              timerString,
+              timer,
               style: Theme.of(context).textTheme.displayMedium, // Mono font
             ),
           ),
@@ -352,8 +323,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Daily Summary', style: Theme.of(context).textTheme.titleSmall),
-                  Text('Today', style: Theme.of(context).textTheme.bodyMedium),
+                  Text('Ringkasan Harian', style: Theme.of(context).textTheme.titleSmall),
+                  Text('Hari Ini', style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
               const SizedBox(height: 16),
@@ -362,7 +333,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   SummaryItem(
                     value: summary?.totalDevices.toString() ?? '0',
-                    label: 'Total\nDevices',
+                    label: 'Total\nPerangkat',
                     valueColor: AppColors.blueTextStroke,
                   ),
                   const SizedBox(width: 12),
@@ -384,7 +355,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               OutlinedButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.history, color: AppColors.blueTextStroke, size: 14),
-                label: const Text('View Detailed History'),
+                label: const Text('Lihat Detail Riwayat'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.blueTextStroke,
                   side: const BorderSide(color: AppColors.lightGrayStroke),
@@ -405,13 +376,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
-        height: 192,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          image: const DecorationImage(
-            image: CachedNetworkImageProvider('https://picsum.photos/400/200'),
-            fit: BoxFit.cover,
-          ),
           boxShadow: const [
             BoxShadow(
               color: Color(0x0D000000),
@@ -420,42 +388,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                const Color(0xFF1A1C1C).withValues(alpha: 0.6),
-                const Color(0xFF1A1C1C).withValues(alpha: 0),
-              ],
-            ),
-          ),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.bottomLeft,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                color: AppColors.textDark.withValues(alpha: 0.8),
-                child: Text(
-                  'Steam Quality Monitor',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.surface,
-                      ),
-                ),
+        alignment: Alignment.center,
+        child: Text(
+          'BIMA POLITEKNIK NEGERI PADANG 2026',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: AppColors.textDark,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 4),
-              Text(
-                'Zone A-12 Production Line',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: AppColors.surface,
-                    ),
-              ),
-            ],
-          ),
         ),
       ),
     );

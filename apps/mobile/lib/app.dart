@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_theme.dart';
-import 'views/dashboard_screen.dart';
+import 'views/main_screen.dart';
 
 import 'viewmodels/dashboard_viewmodel.dart';
+import 'viewmodels/history_viewmodel.dart';
+import 'viewmodels/history_detail_viewmodel.dart';
 import 'services/api_service.dart';
 import 'services/websocket_service.dart';
 
@@ -29,12 +31,32 @@ class MainApp extends StatelessWidget {
                 wsService: wsService,
               )..init(),
         ),
+        ChangeNotifierProxyProvider<ApiService, HistoryViewModel>(
+          create: (context) => HistoryViewModel(
+            apiService: context.read<ApiService>(),
+          ),
+          update: (context, apiService, previous) =>
+              previous ??
+              HistoryViewModel(
+                apiService: apiService,
+              ),
+        ),
+        ChangeNotifierProxyProvider<ApiService, HistoryDetailViewModel>(
+          create: (context) => HistoryDetailViewModel(
+            apiService: context.read<ApiService>(),
+          ),
+          update: (context, apiService, previous) =>
+              previous ??
+              HistoryDetailViewModel(
+                apiService: apiService,
+              ),
+        ),
       ],
       child: MaterialApp(
         title: 'Bima Steamlog',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: const DashboardScreen(),
+        home: const MainScreen(),
       ),
     );
   }

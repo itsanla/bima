@@ -31,6 +31,11 @@ class DashboardViewModel extends ChangeNotifier {
 
     try {
       await _fetchSummary();
+    } catch (e) {
+      debugPrint('Warning: Failed to fetch summary (ignoring): $e');
+    }
+    
+    try {
       _connectWebSocket();
     } catch (e) {
       errorMessage = e.toString();
@@ -75,20 +80,19 @@ class DashboardViewModel extends ChangeNotifier {
               final data = json['data'];
               // Use data from WS directly
               if (currentDevice == null ||
-                  (data.containsKey('deviceId') &&
-                      data['deviceId'] == currentDevice!.deviceId)) {
+                  (data.containsKey('session') &&
+                      data['session'] == currentDevice!.session)) {
                 currentDevice = DeviceModel(
-                  deviceId:
-                      data['deviceId'] ?? currentDevice?.deviceId ?? 'Unknown',
-                  statusApi: data.containsKey('statusApi')
-                      ? data['statusApi']
-                      : (currentDevice?.statusApi ?? false),
-                  temperature: data.containsKey('temperature')
-                      ? (data['temperature'] as num).toDouble()
-                      : (currentDevice?.temperature ?? 0.0),
-                  timer: data.containsKey('timer')
-                      ? data['timer']
-                      : (currentDevice?.timer ?? 0),
+                  session: data['session'] ?? currentDevice?.session ?? 'Unknown',
+                  api: data['api'] ?? currentDevice?.api ?? 'OFF',
+                  suhu: data.containsKey('suhu')
+                      ? (data['suhu'] as num).toDouble()
+                      : (currentDevice?.suhu ?? 0.0),
+                  timer: data['timer'] ?? currentDevice?.timer ?? '00:00:00',
+                  status: data['status'] ?? currentDevice?.status ?? 'IDLE',
+                  airHabis: data.containsKey('air_habis')
+                      ? (data['air_habis'] == true || data['air_habis'] == 'true')
+                      : (currentDevice?.airHabis ?? false),
                   isOnline: true,
                   lastActive: DateTime.now(),
                 );

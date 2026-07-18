@@ -1,16 +1,20 @@
 class DeviceModel {
-  final String deviceId;
-  final bool statusApi;
-  final double temperature;
-  final int timer;
+  final String session;
+  final String api;
+  final double suhu;
+  final String timer;
+  final String status;
+  final bool airHabis;
   final bool isOnline;
   final DateTime? lastActive;
 
   DeviceModel({
-    required this.deviceId,
-    required this.statusApi,
-    required this.temperature,
+    required this.session,
+    required this.api,
+    required this.suhu,
     required this.timer,
+    required this.status,
+    required this.airHabis,
     this.isOnline = false,
     this.lastActive,
   });
@@ -25,28 +29,34 @@ class DeviceModel {
     }
 
     return DeviceModel(
-      deviceId: json['deviceId']?.toString() ?? '',
-      statusApi: json['statusApi'] == true || json['statusApi'] == 'true',
-      temperature: parseDouble(json['temperature']),
-      timer: int.tryParse(json['timer']?.toString() ?? '0') ?? 0,
+      session: json['session']?.toString() ?? '',
+      api: json['api']?.toString() ?? 'OFF',
+      suhu: parseDouble(json['suhu']),
+      timer: json['timer']?.toString() ?? '00:00:00',
+      status: json['status']?.toString() ?? 'IDLE',
+      airHabis: json['air_habis'] == true || json['air_habis'] == 'true',
       isOnline: json['isOnline'] == true || json['isOnline'] == 'true',
       lastActive: json['lastActive'] != null ? DateTime.tryParse(json['lastActive'].toString()) : null,
     );
   }
 
   DeviceModel copyWith({
-    String? deviceId,
-    bool? statusApi,
-    double? temperature,
-    int? timer,
+    String? session,
+    String? api,
+    double? suhu,
+    String? timer,
+    String? status,
+    bool? airHabis,
     bool? isOnline,
     DateTime? lastActive,
   }) {
     return DeviceModel(
-      deviceId: deviceId ?? this.deviceId,
-      statusApi: statusApi ?? this.statusApi,
-      temperature: temperature ?? this.temperature,
+      session: session ?? this.session,
+      api: api ?? this.api,
+      suhu: suhu ?? this.suhu,
       timer: timer ?? this.timer,
+      status: status ?? this.status,
+      airHabis: airHabis ?? this.airHabis,
       isOnline: isOnline ?? this.isOnline,
       lastActive: lastActive ?? this.lastActive,
     );

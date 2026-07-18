@@ -31,14 +31,14 @@ class CustomBottomNav extends StatelessWidget {
           _buildNavItem(
             context: context,
             icon: Icons.dashboard,
-            label: 'Dashboard',
+            label: 'Dasbor',
             isActive: currentIndex == 0,
             onTap: () => onTap(0),
           ),
           _buildNavItem(
             context: context,
             icon: Icons.history,
-            label: 'History',
+            label: 'Riwayat',
             isActive: currentIndex == 1,
             onTap: () => onTap(1),
           ),

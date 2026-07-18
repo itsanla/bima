@@ -9,8 +9,8 @@ void main() {
     const Environment(
       type: EnvType.prod,
       // URL Server Asli
-      apiBaseUrl: 'https://bima.anla.works/api', 
-      wsBaseUrl: 'wss://bima.anla.works/ws',
+      apiBaseUrl: 'https://api.steamlog.cloud/api',
+      wsBaseUrl: 'wss://api.steamlog.cloud/',
     ),
   );
 
