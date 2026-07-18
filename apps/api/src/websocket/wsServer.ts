@@ -10,6 +10,8 @@ interface IExtWebSocket extends WebSocket {
 class WsServer {
   private wss: WebSocketServer | null = null;
   private pingInterval: NodeJS.Timeout | null = null;
+  private persistInterval: NodeJS.Timeout | null = null;
+  private pendingLogs: Map<string | null, Record<string, unknown>> = new Map();
 
   public initialize(server: Server): void {
     this.wss = new WebSocketServer({ server });
@@ -30,23 +32,11 @@ class WsServer {
 
           if (messageType === 'device_update') {
             const { type, ...payload } = parsed;
-            
+
             logger.info(`[WebSocket] Received device_update: ${JSON.stringify(payload)}`);
 
-            try {
-              await prisma.iotLog.create({
-                data: {
-                  sessionId: (payload.session || payload.id) ? String(payload.session || payload.id) : null,
-                  suhu: Number(payload.suhu) || 0,
-                  timer: typeof payload.timer === 'string' ? payload.timer : "00:00:00",
-                  api: typeof payload.api === 'string' ? payload.api : "OFF",
-                  status: typeof payload.status === 'string' ? payload.status : "UNKNOWN",
-                  air_habis: Boolean(payload.air_habis)
-                }
-              });
-            } catch (dbErr: any) {
-              logger.err(`[WebSocket] DB Error: ${dbErr.message}`);
-            }
+            const sessionId = (payload.session || payload.id) ? String(payload.session || payload.id) : null;
+            this.pendingLogs.set(sessionId, payload);
 
             extWs.send(JSON.stringify({
               type: 'ack',
@@ -92,11 +82,44 @@ class WsServer {
       });
     }, 30000);
 
+    this.persistInterval = setInterval(() => {
+      this.flushPendingLogs();
+    }, 30000);
+
     this.wss.on('close', () => {
       if (this.pingInterval) {
         clearInterval(this.pingInterval);
       }
+      if (this.persistInterval) {
+        clearInterval(this.persistInterval);
+      }
     });
+  }
+
+  private async flushPendingLogs(): Promise<void> {
+    if (this.pendingLogs.size === 0) return;
+
+    const entries = Array.from(this.pendingLogs.entries());
+    this.pendingLogs.clear();
+
+    for (const [sessionId, payload] of entries) {
+      try {
+        await prisma.iotLog.create({
+          data: {
+            sessionId,
+            suhu: Number(payload.suhu) || 0,
+            timer: typeof payload.timer === 'string' ? payload.timer : "00:00:00",
+            api: typeof payload.api === 'string' ? payload.api : "OFF",
+            status: typeof payload.status === 'string' ? payload.status : "UNKNOWN",
+            air_habis: Boolean(payload.air_habis)
+          }
+        });
+      } catch (dbErr: any) {
+        logger.err(`[WebSocket] DB Error while flushing session ${sessionId}: ${dbErr.message}`);
+      }
+    }
+
+    logger.info(`[WebSocket] Flushed ${entries.length} session(s) to DB`);
   }
 
   public broadcastToDashboard(data: Record<string, unknown>): void {

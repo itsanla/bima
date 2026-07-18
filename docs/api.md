@@ -4,8 +4,8 @@ Dokumentasi ini berisi daftar seluruh _endpoint_ API dan WebSocket yang tersedia
 
 ---
 
-## 1. HTTP POST: Menyimpan Data Sensor
-Digunakan oleh alat IoT (sebagai alternatif jika tidak ingin menggunakan WebSocket) untuk menyimpan data ke *database*.
+## 1. HTTP POST: Menyimpan Data Sensor (Legacy)
+Endpoint alternatif untuk menyimpan data tanpa WebSocket. **Sudah tidak dipakai oleh alat IoT saat ini** — alat IoT sekarang mengirim data lewat WebSocket saja (lihat bagian 5). Endpoint ini masih aktif sebagai jalur cadangan, dan setiap request yang masuk lewat sini tetap langsung disimpan ke database per baris (tidak melalui mekanisme batching 30 detik yang dipakai jalur WebSocket).
 
 **Endpoint (Secure/Modern):** 
 `POST https://api.steamlog.cloud/api`
@@ -174,7 +174,9 @@ Digunakan untuk komunikasi dua arah *real-time* yang cepat antara alat pengukus 
 `ws://187.127.121.123:8081/`
 
 ### A. Pengiriman Data dari Alat IoT (*Publish*)
-Saat alat IoT mengirimkan data ini, *backend* akan **secara otomatis** menyimpannya ke database dan melakukan *broadcast* ke seluruh aplikasi klien yang sedang terbuka.
+Saat alat IoT mengirimkan data ini, *backend* akan **secara otomatis** melakukan *broadcast* secara *real-time* ke seluruh aplikasi klien yang sedang terbuka (lihat bagian B).
+
+Untuk penyimpanan ke database, *backend* **tidak menyimpan setiap pesan satu per satu** (data dari alat bisa masuk tiap detik). Sebagai gantinya, *backend* menyimpan data **1 baris per sesi setiap 30 detik**, berisi data terakhir yang diterima dari sesi tersebut dalam rentang 30 detik itu. Ini membuat *broadcast* tetap *real-time* tanpa membuat tabel `IotLog` penuh oleh baris yang sangat rapat.
 
 **Format Pengiriman (Kirim String JSON):**
 ```json
