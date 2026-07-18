@@ -81,14 +81,17 @@ https://api.steamlog.cloud/api/logs?page=1&search=1720703810&sortBy=createdAt&so
 ---
 
 ## 3. HTTP GET: Mengambil Riwayat Log per Sesi
-Digunakan untuk menampilkan seluruh riwayat log mentah dari satu sesi pengukusan tertentu, misalnya saat sesi pada tabel daftar sesi (endpoint di atas) diklik.
+Digunakan untuk menampilkan riwayat log mentah dari satu sesi pengukusan tertentu (urut dari yang paling lama), misalnya saat sesi pada tabel daftar sesi (endpoint di atas) diklik. Mendukung *pagination* karena satu sesi bisa berisi ribuan baris log (data per-detik).
 
 **Endpoint:** 
 `GET https://api.steamlog.cloud/api/logs/<sessionId>`
 
+**Query Parameters (Opsional):**
+- `page` : Nomor halaman (Default: 1, dengan limit 10 baris per halaman)
+
 **Contoh Request:**
 ```
-https://api.steamlog.cloud/api/logs/1784046853
+https://api.steamlog.cloud/api/logs/1784046853?page=1
 ```
 
 **Contoh Output:**
@@ -109,9 +112,17 @@ https://api.steamlog.cloud/api/logs/1784046853
       }
     ],
     "createdAt": "2026-07-14T16:36:44.054Z"
+  },
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 2113,
+    "totalPages": 212
   }
 }
 ```
+
+`createdAt` pada level `data` tetap menunjukkan waktu log pertama sesi ini (awal sesi), tidak berubah walau berpindah halaman.
 
 Jika `sessionId` tidak ditemukan, respons berupa HTTP 404 dengan `{"status": "error", "message": "Session not found"}`.
 
