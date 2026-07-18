@@ -202,14 +202,28 @@ const server = createServer(async (req, res) => {
       const limit = 10;
       const skip = (page - 1) * limit;
 
+      const search = url.searchParams.get('search') || undefined;
+      const sortBy = url.searchParams.get('sortBy') === 'suhu' ? 'suhu' : 'createdAt';
+      const sortOrder = url.searchParams.get('sortOrder') === 'desc' ? 'desc' : 'asc';
+
+      const where = {
+        sessionId,
+        ...(search ? {
+          OR: [
+            { status: { contains: search, mode: 'insensitive' as const } },
+            { api: { contains: search, mode: 'insensitive' as const } }
+          ]
+        } : {})
+      };
+
       const [history, total, first] = await Promise.all([
         prisma.iotLog.findMany({
-          where: { sessionId },
-          orderBy: { createdAt: 'asc' },
+          where,
+          orderBy: { [sortBy]: sortOrder },
           skip,
           take: limit
         }),
-        prisma.iotLog.count({ where: { sessionId } }),
+        prisma.iotLog.count({ where }),
         prisma.iotLog.findFirst({
           where: { sessionId },
           orderBy: { createdAt: 'asc' },
@@ -217,7 +231,7 @@ const server = createServer(async (req, res) => {
         })
       ]);
 
-      if (total === 0) {
+      if (!first) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: "error", message: "Session not found" }));
         return;
@@ -229,7 +243,7 @@ const server = createServer(async (req, res) => {
         data: {
           sessionId,
           history,
-          createdAt: first?.createdAt
+          createdAt: first.createdAt
         },
         pagination: {
           page,

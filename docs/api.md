@@ -88,10 +88,13 @@ Digunakan untuk menampilkan riwayat log mentah dari satu sesi pengukusan tertent
 
 **Query Parameters (Opsional):**
 - `page` : Nomor halaman (Default: 1, dengan limit 10 baris per halaman)
+- `search` : Mencari kata kunci pada kolom `status` dan `api`. (Contoh: `ERROR` atau `ON`)
+- `sortBy` : Kolom yang ingin diurutkan. (`createdAt` atau `suhu`. Default: `createdAt`)
+- `sortOrder` : Arah urutan. (`asc` = menaik, `desc` = menurun. Default: `asc`)
 
 **Contoh Request:**
 ```
-https://api.steamlog.cloud/api/logs/1784046853?page=1
+https://api.steamlog.cloud/api/logs/1784046853?page=1&search=RUNNING&sortBy=suhu&sortOrder=desc
 ```
 
 **Contoh Output:**
@@ -122,9 +125,9 @@ https://api.steamlog.cloud/api/logs/1784046853?page=1
 }
 ```
 
-`createdAt` pada level `data` tetap menunjukkan waktu log pertama sesi ini (awal sesi), tidak berubah walau berpindah halaman.
+`createdAt` pada level `data` tetap menunjukkan waktu log pertama sesi ini (awal sesi), tidak berubah walau berpindah halaman atau memakai `search`.
 
-Jika `sessionId` tidak ditemukan, respons berupa HTTP 404 dengan `{"status": "error", "message": "Session not found"}`.
+Jika `sessionId` tidak ditemukan, respons berupa HTTP 404 dengan `{"status": "error", "message": "Session not found"}`. Jika `sessionId` ada tapi `search` tidak menemukan kecocokan, respons tetap HTTP 200 dengan `history: []` dan `pagination.total: 0`.
 
 ---
 
