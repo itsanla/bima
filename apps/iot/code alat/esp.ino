@@ -10,6 +10,9 @@ String sessionId = "";
 unsigned long lastSend = 0;
 unsigned long lastNetworkCheck = 0;
 
+bool wifiConnected = false;
+bool wsConnected = false;
+
 using namespace websockets;
 WebsocketsClient client;
 
@@ -71,19 +74,37 @@ void connectWiFi() {
     Serial.println("WiFi Connected");
     Serial.println(WiFi.localIP());
 
+    if (!wifiConnected) {
+      wifiConnected = true;
+    }
+
   } else {
 
     Serial.println();
     Serial.println("Gagal connect WiFi");
+
+    if (wifiConnected) {
+      wifiConnected = false;
+    }
   }
 }
 
 void cekWiFi() {
 
-  if (WiFi.status() == WL_CONNECTED)
+  if (WiFi.status() == WL_CONNECTED) {
+
+    if (!wifiConnected) {
+      wifiConnected = true;
+    }
+
     return;
+  }
 
   Serial.println("WiFi Terputus");
+
+  if (wifiConnected) {
+    wifiConnected = false;
+  }
 
   WiFi.disconnect();
   WiFi.begin(ssid, password);
@@ -101,6 +122,10 @@ void cekWiFi() {
     Serial.println();
     Serial.println("WiFi Connected Kembali");
 
+    if (!wifiConnected) {
+      wifiConnected = true;
+    }
+
     connectWebSocket();
 
   } else {
@@ -109,25 +134,37 @@ void cekWiFi() {
     Serial.println("Reconnect gagal");
   }
 }
+
 void connectWebSocket() {
 
   if (WiFi.status() != WL_CONNECTED)
     return;
 
   client.close();
+
   Serial.println("Socket ditutup");
 
   delay(100);
-
   Serial.println("Menghubungkan WebSocket...");
+
 
   if (client.connect(WS_URL)) {
 
     Serial.println("WebSocket Connected");
 
+    // hanya tampil jika sebelumnya belum connect
+    if (!wsConnected) {
+      wsConnected = true;
+    }
+
   } else {
 
     Serial.println("WebSocket Failed");
+
+    // hanya tampil jika sebelumnya connect
+    if (wsConnected) {
+      wsConnected = false;
+    }
   }
 }
 
@@ -138,7 +175,31 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
 
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("MONITORING");
+  lcd.setCursor(0, 1);
+  lcd.print("PENGUKUSAN");
+
+  delay(2000);
+  lcd.clear();
   connectWiFi();
+
+  if (WiFi.status() == WL_CONNECTED) {
+
+    lcd.clear();
+
+    lcd.setCursor(0, 0);
+    lcd.print("WIFI TERHUBUNG");
+
+    lcd.setCursor(0, 1);
+    lcd.print(WiFi.localIP());
+
+    delay(2000);
+  }
+
 
   configTime(0, 0, "pool.ntp.org");
 
@@ -182,11 +243,23 @@ void setup() {
     Serial.println((int)event);
     switch (event) {
       case WebsocketsEvent::ConnectionOpened:
+
         Serial.println("WebSocket Opened");
+
+        if (!wsConnected) {
+          wsConnected = true;
+        }
+
         break;
 
       case WebsocketsEvent::ConnectionClosed:
+
         Serial.println("WebSocket Closed");
+
+        if (wsConnected) {
+          wsConnected = false;
+        }
+
         break;
 
       case WebsocketsEvent::GotPing:
@@ -204,7 +277,6 @@ void setup() {
       Serial.println(data);
     }
   });
-
   if (WiFi.status() == WL_CONNECTED) {
     connectWebSocket();
   }
@@ -223,16 +295,6 @@ void setup() {
   digitalWrite(buzzerPin, LOW);
 
   // LCD
-  lcd.init();
-  lcd.backlight();
-
-  lcd.setCursor(0, 0);
-  lcd.print("MONITORING");
-  lcd.setCursor(0, 1);
-  lcd.print("PENGUKUSAN");
-
-  delay(2000);
-  lcd.clear();
 }
 
 void kirimDataWiFi(float suhu,
@@ -283,7 +345,7 @@ void loop()
 
   if (WiFi.status() == WL_CONNECTED) {
 
-    if (!client.available()) {
+    if (!wsConnected) {
 
       if (millis() - lastReconnect >= 5000) {
 
@@ -416,59 +478,93 @@ void loop()
   int detik = elapsed % 60;
 
   // ================= LCD =================
-  if (alarmAirHabis) {
-    digitalWrite(ledMerah, HIGH);
 
-    if (!alarmMute) {
-      digitalWrite(buzzerPin, HIGH);
-    }
+  if (WiFi.status() != WL_CONNECTED) {
 
     lcd.setCursor(0, 0);
-    lcd.print("!!!AIR HABIS!!!");
-
+    lcd.print("                ");
     lcd.setCursor(0, 1);
-    lcd.print("ISI ULANG AIR  ");
-  } else {
-    lcd.setCursor(0, 0);
     lcd.print("                ");
 
     lcd.setCursor(0, 0);
-    lcd.print("T:");
-    lcd.print(suhu, 1);
-    lcd.print("C");
+    lcd.print("WIFI");
 
-    if (flame == LOW) {
-      lcd.setCursor(12, 0);
-      lcd.print("ON ");
-    } else {
-      lcd.setCursor(12, 0);
-      lcd.print("OFF");
-    }
+    lcd.setCursor(0, 1);
+    lcd.print("MENGHUBUNGKAN");
+  }
 
+  else if (!wsConnected) {
+
+    lcd.setCursor(0, 0);
+    lcd.print("                ");
     lcd.setCursor(0, 1);
     lcd.print("                ");
 
+    lcd.setCursor(0, 0);
+    lcd.print("WEBSOCKET");
+
     lcd.setCursor(0, 1);
+    lcd.print("MENGHUBUNGKAN");
+  }
 
-    if (jam < 10) lcd.print("0");
-    lcd.print(jam);
-    lcd.print(":");
+  else {
 
-    if (menit < 10) lcd.print("0");
-    lcd.print(menit);
-    lcd.print(":");
+    if (alarmAirHabis) {
+      digitalWrite(ledMerah, HIGH);
 
-    if (detik < 10) lcd.print("0");
-    lcd.print(detik);
+      if (!alarmMute) {
+        digitalWrite(buzzerPin, HIGH);
+      }
 
-    lcd.print(" ");
+      lcd.setCursor(0, 0);
+      lcd.print("!!!AIR HABIS!!!");
 
-    if (!timerStarted) {
-      lcd.print("---");
-    } else if (timerPaused) {
-      lcd.print("PAU");
+      lcd.setCursor(0, 1);
+      lcd.print("ISI ULANG AIR  ");
+
     } else {
-      lcd.print("RUN");
+
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+
+      lcd.setCursor(0, 0);
+      lcd.print("T:");
+      lcd.print(suhu, 1);
+      lcd.print("C");
+
+      if (flame == LOW) {
+        lcd.setCursor(12, 0);
+        lcd.print("ON ");
+      } else {
+        lcd.setCursor(12, 0);
+        lcd.print("OFF");
+      }
+
+      lcd.setCursor(0, 1);
+      lcd.print("                ");
+
+      lcd.setCursor(0, 1);
+
+      if (jam < 10) lcd.print("0");
+      lcd.print(jam);
+      lcd.print(":");
+
+      if (menit < 10) lcd.print("0");
+      lcd.print(menit);
+      lcd.print(":");
+
+      if (detik < 10) lcd.print("0");
+      lcd.print(detik);
+
+      lcd.print(" ");
+
+      if (!timerStarted) {
+        lcd.print("---");
+      } else if (timerPaused) {
+        lcd.print("PAU");
+      } else {
+        lcd.print("RUN");
+      }
     }
   }
 
