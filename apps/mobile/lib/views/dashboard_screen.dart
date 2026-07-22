@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/app_colors.dart';
 import '../viewmodels/dashboard_viewmodel.dart';
-import '../models/dashboard_summary_model.dart';
 import 'widgets/custom_app_bar.dart';
 import 'widgets/status_badge.dart';
 import 'widgets/metric_card.dart';
-import 'widgets/summary_item.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -14,83 +12,98 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Monitoring Alat Kukusan',
-      ),
-      body: Selector<DashboardViewModel, ({bool isLoading, String? errorMessage})>(
-        selector: (_, viewModel) => (isLoading: viewModel.isLoading, errorMessage: viewModel.errorMessage),
-        builder: (context, state, child) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Error: ${state.errorMessage}', style: const TextStyle(color: Colors.red)),
-                  ElevatedButton(
-                    onPressed: () => context.read<DashboardViewModel>().init(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 16, bottom: 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Selector<DashboardViewModel, ({bool isRunning, String deviceId, bool isWsConnected, DateTime? lastActive})>(
-                  selector: (_, viewModel) {
-                    final device = viewModel.currentDevice;
-                    return (
-                      isRunning: device?.api == 'ON',
-                      deviceId: device?.session ?? 'Unknown',
-                      isWsConnected: viewModel.isWsConnected,
-                      lastActive: device?.lastActive,
-                    );
-                  },
-                  builder: (context, data, _) => _buildMachineStatusCard(
-                    context,
-                    isRunning: data.isRunning,
-                    deviceId: data.deviceId,
-                    isWsConnected: data.isWsConnected,
-                    lastActive: data.lastActive,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Selector<DashboardViewModel, ({double temp, String timer, bool isFireOn})>(
-                  selector: (_, viewModel) {
-                    final device = viewModel.currentDevice;
-                    return (
-                      temp: device?.suhu ?? 0.0,
-                      timer: device?.timer ?? '00:00:00',
-                      isFireOn: device?.api == 'ON',
-                    );
-                  },
-                  builder: (context, data, _) => _buildMetricGrid(
-                    context,
-                    isFireOn: data.isFireOn,
-                    temperature: data.temp,
-                    timer: data.timer,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Selector<DashboardViewModel, DashboardSummaryModel?>(
-                  selector: (_, viewModel) => viewModel.summary,
-                  builder: (context, summary, _) => _buildDailySummaryCard(context, summary),
-                ),
-                const SizedBox(height: 16),
-                _buildVisualContextImage(context),
-              ],
+      appBar: const CustomAppBar(title: 'Monitoring Alat Kukusan'),
+      body:
+          Selector<
+            DashboardViewModel,
+            ({bool isLoading, String? errorMessage})
+          >(
+            selector: (_, viewModel) => (
+              isLoading: viewModel.isLoading,
+              errorMessage: viewModel.errorMessage,
             ),
-          );
-        },
-      ),
+            builder: (context, state, child) {
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state.errorMessage != null) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Error: ${state.errorMessage}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.read<DashboardViewModel>().init(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 16, bottom: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Selector<
+                      DashboardViewModel,
+                      ({
+                        bool isRunning,
+                        String deviceId,
+                        bool isWsConnected,
+                        DateTime? lastActive,
+                      })
+                    >(
+                      selector: (_, viewModel) {
+                        final device = viewModel.currentDevice;
+                        return (
+                          isRunning: device?.api == 'ON',
+                          deviceId: device?.session ?? 'Unknown',
+                          isWsConnected: viewModel.isWsConnected,
+                          lastActive: device?.lastActive,
+                        );
+                      },
+                      builder: (context, data, _) => _buildMachineStatusCard(
+                        context,
+                        isRunning: data.isRunning,
+                        deviceId: data.deviceId,
+                        isWsConnected: data.isWsConnected,
+                        lastActive: data.lastActive,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Selector<
+                      DashboardViewModel,
+                      ({double temp, String timer, bool isFireOn})
+                    >(
+                      selector: (_, viewModel) {
+                        final device = viewModel.currentDevice;
+                        return (
+                          temp: device?.suhu ?? 0.0,
+                          timer: device?.timer ?? '00:00:00',
+                          isFireOn: device?.api == 'ON',
+                        );
+                      },
+                      builder: (context, data, _) => _buildMetricGrid(
+                        context,
+                        isFireOn: data.isFireOn,
+                        temperature: data.temp,
+                        timer: data.timer,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildVisualContextImage(context),
+                  ],
+                ),
+              );
+            },
+          ),
     );
   }
 
@@ -107,8 +120,10 @@ class DashboardScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: isRunning ? AppColors.primaryGreen : AppColors.lightGrayStroke, 
-            width: 4
+            color: isRunning
+                ? AppColors.primaryGreen
+                : AppColors.lightGrayStroke,
+            width: 4,
           ),
         ),
         child: Padding(
@@ -125,9 +140,9 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       Text(
                         'STATUS SAAT INI',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              letterSpacing: 0.05,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(letterSpacing: 0.05),
                       ),
                       const SizedBox(height: 4),
                       Row(
@@ -136,7 +151,9 @@ class DashboardScreen extends StatelessWidget {
                             width: 12,
                             height: 12,
                             decoration: BoxDecoration(
-                              color: isRunning ? AppColors.primaryGreen : Colors.grey,
+                              color: isRunning
+                                  ? AppColors.primaryGreen
+                                  : Colors.grey,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -174,21 +191,33 @@ class DashboardScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('ID Mesin', style: Theme.of(context).textTheme.bodyMedium),
+                      Text(
+                        'ID Mesin',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                       const SizedBox(height: 4),
-                      Text(deviceId, style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        deviceId,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('Terakhir Aktif', style: Theme.of(context).textTheme.bodyMedium),
+                      Text(
+                        'Terakhir Aktif',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                       const SizedBox(height: 4),
                       Text(
-                        lastActive != null 
-                          ? '${lastActive.hour.toString().padLeft(2,'0')}:${lastActive.minute.toString().padLeft(2,'0')}'
-                          : 'N/A', 
-                        style: Theme.of(context).textTheme.titleLarge
+                        lastActive != null
+                            ? () {
+                                final gmt7 = lastActive.toUtc().add(const Duration(hours: 7));
+                                return '${gmt7.hour.toString().padLeft(2, '0')}:${gmt7.minute.toString().padLeft(2, '0')}';
+                              }()
+                            : 'N/A',
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ],
                   ),
@@ -232,24 +261,33 @@ class DashboardScreen extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: isFireOn ? AppColors.lightOrangeBg : AppColors.lightGrayStroke.withValues(alpha: 0.3),
+                    color: isFireOn
+                        ? AppColors.lightOrangeBg
+                        : AppColors.lightGrayStroke.withValues(alpha: 0.3),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.local_fire_department, 
-                    color: isFireOn ? AppColors.orangeBrown : AppColors.darkGrayNavIcon
+                    Icons.local_fire_department,
+                    color: isFireOn
+                        ? AppColors.orangeBrown
+                        : AppColors.darkGrayNavIcon,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Status Api', style: Theme.of(context).textTheme.bodyMedium),
+                    Text(
+                      'Status Api',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                     Text(
                       isFireOn ? 'NYALA' : 'MATI',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: isFireOn ? AppColors.orangeBrown : AppColors.darkGrayNavIcon,
-                          ),
+                        color: isFireOn
+                            ? AppColors.orangeBrown
+                            : AppColors.darkGrayNavIcon,
+                      ),
                     ),
                   ],
                 ),
@@ -267,16 +305,27 @@ class DashboardScreen extends StatelessWidget {
                 color: AppColors.lightBlueBg,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.thermostat, color: AppColors.blueTextStroke),
+              child: const Icon(
+                Icons.thermostat,
+                color: AppColors.blueTextStroke,
+              ),
             ),
             title: 'Suhu Saat Ini',
             content: Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text(temperature.toStringAsFixed(1), style: Theme.of(context).textTheme.displayLarge),
+                Text(
+                  temperature.toStringAsFixed(1),
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
                 const SizedBox(width: 4),
-                Text('°C', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.lightGrayStroke)),
+                Text(
+                  '°C',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppColors.lightGrayStroke,
+                  ),
+                ),
               ],
             ),
           ),
@@ -291,15 +340,18 @@ class DashboardScreen extends StatelessWidget {
                 color: AppColors.lightGreenBg,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.timer_outlined, color: AppColors.darkGreenStroke),
+              child: const Icon(
+                Icons.timer_outlined,
+                color: AppColors.darkGreenStroke,
+              ),
             ),
-            trailing: isFireOn 
-              ? const StatusBadge(
-                  text: 'Berjalan',
-                  backgroundColor: AppColors.lightGreenBg,
-                  textColor: AppColors.primaryGreen,
-                )
-              : const SizedBox.shrink(),
+            trailing: isFireOn
+                ? const StatusBadge(
+                    text: 'Berjalan',
+                    backgroundColor: AppColors.lightGreenBg,
+                    textColor: AppColors.primaryGreen,
+                  )
+                : const SizedBox.shrink(),
             title: 'Waktu Berjalan',
             content: Text(
               timer,
@@ -307,67 +359,6 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDailySummaryCard(BuildContext context, DashboardSummaryModel? summary) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Ringkasan Harian', style: Theme.of(context).textTheme.titleSmall),
-                  Text('Hari Ini', style: Theme.of(context).textTheme.bodyMedium),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SummaryItem(
-                    value: summary?.totalDevices.toString() ?? '0',
-                    label: 'Total\nPerangkat',
-                    valueColor: AppColors.blueTextStroke,
-                  ),
-                  const SizedBox(width: 12),
-                  SummaryItem(
-                    value: summary?.onlineDevices.toString() ?? '0',
-                    label: 'Online',
-                    valueColor: AppColors.darkGreenText,
-                    hasBackground: true,
-                  ),
-                  const SizedBox(width: 12),
-                  SummaryItem(
-                    value: summary?.offlineDevices.toString() ?? '0',
-                    label: 'Offline',
-                    valueColor: const Color(0xFF693C00), 
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              OutlinedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.history, color: AppColors.blueTextStroke, size: 14),
-                label: const Text('Lihat Detail Riwayat'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.blueTextStroke,
-                  side: const BorderSide(color: AppColors.lightGrayStroke),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(9999),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -393,9 +384,9 @@ class DashboardScreen extends StatelessWidget {
           'BIMA POLITEKNIK NEGERI PADANG 2026',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: AppColors.textDark,
-                fontWeight: FontWeight.bold,
-              ),
+            color: AppColors.textDark,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

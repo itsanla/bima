@@ -26,7 +26,8 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
   }
 
   String _formatTime(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:${time.second.toString().padLeft(2, '0')}';
+    final gmt7Time = time.toUtc().add(const Duration(hours: 7));
+    return '${gmt7Time.hour.toString().padLeft(2, '0')}:${gmt7Time.minute.toString().padLeft(2, '0')}:${gmt7Time.second.toString().padLeft(2, '0')}';
   }
 
   @override

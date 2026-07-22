@@ -10,13 +10,15 @@ class HistoryCard extends StatelessWidget {
   const HistoryCard({super.key, required this.record});
 
   String _formatTime(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    final gmt7Time = time.toUtc().add(const Duration(hours: 7));
+    return '${gmt7Time.hour.toString().padLeft(2, '0')}:${gmt7Time.minute.toString().padLeft(2, '0')}';
   }
 
   @override
   Widget build(BuildContext context) {
     final timeStr = _formatTime(record.createdAt);
-    final dateStr = '${record.createdAt.day}/${record.createdAt.month}/${record.createdAt.year}';
+    final gmt7Date = record.createdAt.toUtc().add(const Duration(hours: 7));
+    final dateStr = '${gmt7Date.day}/${gmt7Date.month}/${gmt7Date.year}';
     final durationStr = 'Sesi ${record.sessionId}';
 
     return Card(
