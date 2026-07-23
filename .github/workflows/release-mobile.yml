@@ -1,0 +1,142 @@
+name: Mobile Release & Patch CI/CD
+
+on:
+  push:
+    branches:
+      - mobile
+    tags:
+      - 'v*'
+
+jobs:
+  build_and_deploy:
+    name: Build & Deploy Shorebird Release or Patch
+    runs-on: ubuntu-latest
+    steps:
+      # 3.1.2 Checkout
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for git diff
+
+      # 3.1.3 Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.11.4'
+          channel: 'stable'
+
+      # 3.1.4 flutter pub get
+      - name: Install Dependencies
+        working-directory: apps/mobile
+        run: flutter pub get
+
+      # 3.1.5 flutter test
+      - name: Run Tests
+        working-directory: apps/mobile
+        run: flutter test
+
+      # 3.1.6 Build APK (Optional, Shorebird handles its own build, but keeping it for tests if required, although shorebird release/patch builds the app. I'll omit standard build unless shorebird fails to build it, or just do it as requested)
+      - name: Build APK (Test build)
+        working-directory: apps/mobile
+        run: flutter build apk --release
+
+      # 3.2 Cek perubahan file
+      - name: Detect Native or Dependency Changes
+        id: detect_changes
+        run: |
+          # Dapatkan commit sebelumnya, jika ini push pertama ambil HEAD~1
+          PREV_COMMIT="${{ github.event.before }}"
+          if [ -z "$PREV_COMMIT" ] || [ "$PREV_COMMIT" = "0000000000000000000000000000000000000000" ]; then
+            PREV_COMMIT="HEAD~1"
+          fi
+          
+          echo "Comparing $PREV_COMMIT to HEAD..."
+          
+          # Cek file yang berubah (android/, assets/, fonts/, pubspec.yaml)
+          NATIVE_CHANGES=$(git diff --name-only $PREV_COMMIT HEAD | grep -E '^apps/mobile/(android/|assets/|fonts/|pubspec.yaml)' || true)
+          
+          if [ -n "$NATIVE_CHANGES" ]; then
+            echo "Changes detected in native or dependencies:"
+            echo "$NATIVE_CHANGES"
+            echo "needs_full_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "No native/dependency changes detected. Only Dart changes."
+            echo "needs_full_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 3.3.1 Setup Shorebird
+      - name: Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+
+      # 3.3.2 Shorebird Patch
+      - name: Shorebird Patch (Dart-only)
+        if: steps.detect_changes.outputs.needs_full_release == 'false'
+        working-directory: apps/mobile
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+        run: shorebird patch android --force
+
+      # 3.4.1 Shorebird Release
+      - name: Shorebird Release (Full APK)
+        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        working-directory: apps/mobile
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+        run: shorebird release android --force
+
+      # Extract version from pubspec
+      - name: Extract Version
+        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        id: extract_version
+        working-directory: apps/mobile
+        run: |
+          # Parse version and build number from pubspec.yaml
+          VERSION_LINE=$(grep '^version:' pubspec.yaml)
+          VERSION_STRING=$(echo $VERSION_LINE | awk '{print $2}')
+          VERSION_NAME=$(echo $VERSION_STRING | cut -d'+' -f1)
+          BUILD_NUMBER=$(echo $VERSION_STRING | cut -d'+' -f2)
+          
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          echo "RELEASE_NOTES=Automated release from CI" >> $GITHUB_ENV
+          echo "APK_FILENAME=app-${VERSION_NAME}-${BUILD_NUMBER}.apk" >> $GITHUB_ENV
+
+      # 3.4.2 Upload APK ke VPS
+      - name: Upload APK to VPS
+        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          # Buat SSH key file
+          mkdir -p ~/.ssh
+          echo "$VPS_SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
+          
+          # Rename APK yang dibuild oleh shorebird
+          cd apps/mobile/build/app/outputs/flutter-apk/
+          mv app-release.apk ${{ env.APK_FILENAME }}
+          
+          # Upload dengan SCP
+          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_HOST:/opt/app-update/storage/apk/
+
+      # 3.4.3 POST metadata ke API
+      - name: Update API Metadata
+        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          curl -X POST https://$VPS_HOST/api/v1/releases \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $API_TOKEN" \
+            -d "{
+              \"version_name\": \"${{ env.VERSION_NAME }}\",
+              \"build_number\": ${{ env.BUILD_NUMBER }},
+              \"apk_url\": \"https://$VPS_HOST/storage/apk/${{ env.APK_FILENAME }}\",
+              \"release_notes\": \"${{ env.RELEASE_NOTES }}\",
+              \"force_update\": false,
+              \"channel\": \"stable\"
+            }"

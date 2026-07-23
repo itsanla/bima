@@ -6,11 +6,13 @@ class Environment {
   final EnvType type;
   final String apiBaseUrl;
   final String wsBaseUrl;
+  final String updateBaseUrl;
 
   const Environment({
     required this.type,
     required this.apiBaseUrl,
     required this.wsBaseUrl,
+    required this.updateBaseUrl,
   });
 
   /// Singleton instance yang akan di-inject saat aplikasi start.

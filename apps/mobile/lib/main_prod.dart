@@ -11,6 +11,8 @@ void main() {
       // URL Server Asli
       apiBaseUrl: 'https://api.steamlog.cloud/api',
       wsBaseUrl: 'wss://api.steamlog.cloud/',
+      // URL khusus untuk backend update
+      updateBaseUrl: 'https://api.steamlog.cloud',
     ),
   );
 

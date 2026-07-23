@@ -39,7 +39,7 @@ class MetricCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [icon, if (trailing != null) trailing!],
+            children: [icon, ?trailing],
           ),
           const SizedBox(height: 12),
           Text(title, style: Theme.of(context).textTheme.bodyMedium),

@@ -11,6 +11,8 @@ void main() {
       // Gunakan localhost (10.0.2.2 untuk emulator Android) atau IP lokal
       apiBaseUrl: 'https://api.steamlog.cloud/api',
       wsBaseUrl: 'wss://api.steamlog.cloud/',
+      // URL khusus untuk backend update
+      updateBaseUrl: 'http://10.0.2.2:3100',
     ),
   );
 

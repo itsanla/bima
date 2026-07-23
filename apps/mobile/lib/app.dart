@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_theme.dart';
-import 'views/main_screen.dart';
+import 'views/splash_screen.dart';
 
 import 'viewmodels/dashboard_viewmodel.dart';
 import 'viewmodels/history_viewmodel.dart';
@@ -56,7 +56,7 @@ class MainApp extends StatelessWidget {
         title: 'Bima Steamlog',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: const MainScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

@@ -17,8 +17,8 @@ class ApiService {
       };
 
   /// GET request.
-  Future<http.Response> get(String endpoint) {
-    final uri = Uri.parse('${ApiConfig.baseUrl}$endpoint');
+  Future<http.Response> get(String endpoint, {String? customBaseUrl}) {
+    final uri = Uri.parse('${customBaseUrl ?? ApiConfig.baseUrl}$endpoint');
     return _client.get(uri, headers: _headers).timeout(_timeout);
   }
 
