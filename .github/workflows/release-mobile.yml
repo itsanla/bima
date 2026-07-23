@@ -109,8 +109,16 @@ jobs:
           
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "RELEASE_NOTES=Automated release from CI" >> $GITHUB_ENV
+          echo "RELEASE_NOTES=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
           echo "APK_FILENAME=app-${VERSION_NAME}-${BUILD_NUMBER}.apk" >> $GITHUB_ENV
+          
+          # Cek jika commit message mengandung tag [force update]
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          if echo "$COMMIT_MSG" | grep -qi '\[force update\]'; then
+            echo "FORCE_UPDATE=true" >> $GITHUB_ENV
+          else
+            echo "FORCE_UPDATE=false" >> $GITHUB_ENV
+          fi
 
       # 3.4.2 Upload APK ke VPS
       - name: Upload APK to VPS
@@ -148,6 +156,6 @@ jobs:
               \"build_number\": ${{ env.BUILD_NUMBER }},
               \"apk_url\": \"http://$API_DOMAIN:2095/storage/apk/${{ env.APK_FILENAME }}\",
               \"release_notes\": \"${{ env.RELEASE_NOTES }}\",
-              \"force_update\": false,
+              \"force_update\": ${{ env.FORCE_UPDATE }},
               \"channel\": \"stable\"
             }"
