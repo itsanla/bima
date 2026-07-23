@@ -65,15 +65,31 @@ jobs:
 
       # 3.3.2 Shorebird Patch
       - name: Shorebird Patch (Dart-only)
+        id: shorebird_patch
         if: steps.detect_changes.outputs.needs_full_release == 'false'
         working-directory: apps/mobile
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-        run: shorebird patch android -t lib/main_prod.dart
+        run: |
+          set +e
+          shorebird patch android -t lib/main_prod.dart
+          EXIT_CODE=$?
+          set -e
+          
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "Patch successful."
+          elif [ $EXIT_CODE -eq 70 ]; then
+            echo "Native changes detected by Shorebird (exit code 70). Falling back to full release."
+          else
+            echo "Shorebird patch failed with unexpected exit code $EXIT_CODE."
+            exit $EXIT_CODE
+          fi
 
       # 3.4.1 Shorebird Release
       - name: Shorebird Release (Full APK)
-        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         working-directory: apps/mobile
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
@@ -81,7 +97,7 @@ jobs:
 
       # Extract version from pubspec
       - name: Extract Version
-        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         id: extract_version
         working-directory: apps/mobile
         run: |
@@ -98,7 +114,7 @@ jobs:
 
       # 3.4.2 Upload APK ke VPS
       - name: Upload APK to VPS
-        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -119,7 +135,7 @@ jobs:
 
       # 3.4.3 POST metadata ke API
       - name: Update API Metadata
-        if: steps.detect_changes.outputs.needs_full_release == 'true'
+        if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
