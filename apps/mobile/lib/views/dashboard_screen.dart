@@ -213,7 +213,9 @@ class DashboardScreen extends StatelessWidget {
                       Text(
                         lastActive != null
                             ? () {
-                                final gmt7 = lastActive.toUtc().add(const Duration(hours: 7));
+                                final gmt7 = lastActive.toUtc().add(
+                                  const Duration(hours: 7),
+                                );
                                 return '${gmt7.hour.toString().padLeft(2, '0')}:${gmt7.minute.toString().padLeft(2, '0')}';
                               }()
                             : 'N/A',

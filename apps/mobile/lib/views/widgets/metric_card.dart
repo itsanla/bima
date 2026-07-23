@@ -25,12 +25,7 @@ class MetricCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border(
-          left: BorderSide(
-            color: borderColor,
-            width: 4,
-          ),
-        ),
+        border: Border(left: BorderSide(color: borderColor, width: 4)),
         boxShadow: const [
           BoxShadow(
             color: Color(0x0D000000), // rgba(0, 0, 0, 0.05)
@@ -44,16 +39,10 @@ class MetricCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              icon,
-              if (trailing != null) trailing!,
-            ],
+            children: [icon, if (trailing != null) trailing!],
           ),
           const SizedBox(height: 12),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(title, style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: 4),
           content,
         ],
