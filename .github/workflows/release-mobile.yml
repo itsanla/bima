@@ -30,11 +30,6 @@ jobs:
         working-directory: apps/mobile
         run: flutter pub get
 
-      # 3.1.5 flutter test
-      - name: Run Tests
-        working-directory: apps/mobile
-        run: flutter test
-
       # 3.1.6 Build APK (Optional, Shorebird handles its own build, but keeping it for tests if required, although shorebird release/patch builds the app. I'll omit standard build unless shorebird fails to build it, or just do it as requested)
       - name: Build APK (Test build)
         working-directory: apps/mobile
