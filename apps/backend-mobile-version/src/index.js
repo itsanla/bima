@@ -25,6 +25,18 @@ app.use(logger);
 app.use('/api/v1/releases', releasesRouter);
 app.use('/api/v1/app', appRouter);
 
+// Serve Static Files for APK Downloads
+const path = require('path');
+const apkStoragePath = process.env.APK_STORAGE_PATH || './storage/apk';
+app.use('/download', express.static(path.resolve(apkStoragePath), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.apk')) {
+      res.setHeader('Content-Type', 'application/vnd.android.package-archive');
+      res.setHeader('Content-Disposition', 'attachment');
+    }
+  }
+}));
+
 // Health check endpoint
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
