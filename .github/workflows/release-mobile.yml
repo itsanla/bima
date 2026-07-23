@@ -33,7 +33,7 @@ jobs:
       # 3.1.6 Build APK (Optional, Shorebird handles its own build, but keeping it for tests if required, although shorebird release/patch builds the app. I'll omit standard build unless shorebird fails to build it, or just do it as requested)
       - name: Build APK (Test build)
         working-directory: apps/mobile
-        run: flutter build apk --release
+        run: flutter build apk -t lib/main_prod.dart --release
 
       # 3.2 Cek perubahan file
       - name: Detect Native or Dependency Changes
@@ -69,7 +69,7 @@ jobs:
         working-directory: apps/mobile
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-        run: shorebird patch android --force
+        run: shorebird patch android -t lib/main_prod.dart --force
 
       # 3.4.1 Shorebird Release
       - name: Shorebird Release (Full APK)
@@ -77,7 +77,7 @@ jobs:
         working-directory: apps/mobile
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-        run: shorebird release android --force
+        run: shorebird release android -t lib/main_prod.dart --force
 
       # Extract version from pubspec
       - name: Extract Version
