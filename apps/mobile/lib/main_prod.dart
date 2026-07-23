@@ -12,7 +12,7 @@ void main() {
       apiBaseUrl: 'https://api.steamlog.cloud/api',
       wsBaseUrl: 'wss://api.steamlog.cloud/',
       // URL khusus untuk backend update
-      updateBaseUrl: 'https://api.steamlog.cloud',
+      updateBaseUrl: 'http://bima-version.furqonaugust.site:2095',
     ),
   );
 
