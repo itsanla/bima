@@ -116,7 +116,7 @@ jobs:
       - name: Upload APK to VPS
         if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_IP: ${{ secrets.VPS_IP }}
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
@@ -124,29 +124,29 @@ jobs:
           mkdir -p ~/.ssh
           echo "$VPS_SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
+          ssh-keyscan -H $VPS_IP >> ~/.ssh/known_hosts
           
           # Rename APK yang dibuild oleh shorebird
           cd apps/mobile/build/app/outputs/flutter-apk/
           mv app-release.apk ${{ env.APK_FILENAME }}
           
           # Upload dengan SCP
-          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_HOST:/home/furqon/bima/apps/storage/apk/
+          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_IP:/home/furqon/bima/apps/storage/apk/
 
       # 3.4.3 POST metadata ke API
       - name: Update API Metadata
         if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
+          API_DOMAIN: ${{ secrets.API_DOMAIN }}
         run: |
-          curl -X POST http://$VPS_HOST:2095/api/v1/releases \
+          curl -X POST http://$API_DOMAIN:2095/api/v1/releases \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $API_TOKEN" \
             -d "{
               \"version_name\": \"${{ env.VERSION_NAME }}\",
               \"build_number\": ${{ env.BUILD_NUMBER }},
-              \"apk_url\": \"http://$VPS_HOST:2095/storage/apk/${{ env.APK_FILENAME }}\",
+              \"apk_url\": \"http://$API_DOMAIN:2095/storage/apk/${{ env.APK_FILENAME }}\",
               \"release_notes\": \"${{ env.RELEASE_NOTES }}\",
               \"force_update\": false,
               \"channel\": \"stable\"
