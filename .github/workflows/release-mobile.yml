@@ -131,7 +131,7 @@ jobs:
           mv app-release.apk ${{ env.APK_FILENAME }}
           
           # Upload dengan SCP
-          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_HOST:/opt/app-update/storage/apk/
+          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_HOST:/home/furqon/bima/apps/storage/apk/
 
       # 3.4.3 POST metadata ke API
       - name: Update API Metadata
