@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  bima-api:
+  backend-mobile-version:
     build: .
-    container_name: bima-backend-api
+    container_name: backend-mobile-version
     restart: unless-stopped
     env_file:
       - .env
@@ -19,11 +19,11 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=coolify"
       # Routing untuk API
-      - "traefik.http.routers.bima-api.rule=Host(`bima-version.steamlog.cloud`)"
-      - "traefik.http.routers.bima-api.entrypoints=https"
-      - "traefik.http.routers.bima-api.tls=true"
-      - "traefik.http.routers.bima-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.bima-api.loadbalancer.server.port=3100"
+      - "traefik.http.routers.backend-mobile-version.rule=Host(`bima-version.steamlog.cloud`)"
+      - "traefik.http.routers.backend-mobile-version.entrypoints=https"
+      - "traefik.http.routers.backend-mobile-version.tls=true"
+      - "traefik.http.routers.backend-mobile-version.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend-mobile-version.loadbalancer.server.port=3100"
 
 networks:
   coolify:
