@@ -30,6 +30,21 @@ jobs:
         working-directory: apps/mobile
         run: flutter pub get
 
+      # 3.1.5 Setup Keystore
+      - name: Setup Keystore
+        working-directory: apps/mobile/android
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 --decode > app/upload-keystore.jks
+          echo "storePassword=$STORE_PASSWORD" > key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> key.properties
+          echo "keyAlias=$KEY_ALIAS" >> key.properties
+          echo "storeFile=../app/upload-keystore.jks" >> key.properties
+
       # 3.1.6 Build APK (Optional, Shorebird handles its own build, but keeping it for tests if required, although shorebird release/patch builds the app. I'll omit standard build unless shorebird fails to build it, or just do it as requested)
       - name: Build APK (Test build)
         working-directory: apps/mobile

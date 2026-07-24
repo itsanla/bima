@@ -1,4 +1,4 @@
-package com.example.mobile
+package com.developertipnp.bimasteamlog
 
 import io.flutter.embedding.android.FlutterActivity
 
