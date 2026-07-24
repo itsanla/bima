@@ -17,11 +17,12 @@ services:
       - coolify
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
       # Routing untuk API
-      - "traefik.http.routers.bima-api-custom.rule=Host(`bima-version.steamlog.cloud`)"
-      - "traefik.http.routers.bima-api-custom.entrypoints=https"
-      - "traefik.http.routers.bima-api-custom.tls=true"
-      - "traefik.http.services.bima-api-custom.loadbalancer.server.port=3100"
+      - "traefik.http.routers.bima-api.rule=Host(`bima-version.steamlog.cloud`)"
+      - "traefik.http.routers.bima-api.entrypoints=https"
+      - "traefik.http.routers.bima-api.tls=true"
+      - "traefik.http.services.bima-api.loadbalancer.server.port=3100"
 
 networks:
   coolify:
