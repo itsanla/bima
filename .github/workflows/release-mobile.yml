@@ -153,23 +153,23 @@ jobs:
           cd apps/mobile/build/app/outputs/flutter-apk/
           mv app-release.apk ${{ env.APK_FILENAME }}
           
-          # Upload dengan SCP
-          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_IP:/home/furqon/bima/apps/storage/apk/
+          # Upload APK ke /tmp lalu inject ke Docker container
+          scp -i ~/.ssh/id_rsa ${{ env.APK_FILENAME }} $VPS_USER@$VPS_IP:/tmp/${{ env.APK_FILENAME }}
+          ssh -i ~/.ssh/id_rsa $VPS_USER@$VPS_IP "CONTAINER_NAME=\$(docker ps --filter 'name=backend-mobile-version' --format '{{.Names}}' | head -n 1) && docker exec \$CONTAINER_NAME mkdir -p /app/storage/apk && docker cp /tmp/${{ env.APK_FILENAME }} \$CONTAINER_NAME:/app/storage/apk/ && rm /tmp/${{ env.APK_FILENAME }}"
 
       # 3.4.3 POST metadata ke API
       - name: Update API Metadata
         if: steps.detect_changes.outputs.needs_full_release == 'true' || steps.shorebird_patch.outputs.exit_code == '70'
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
-          API_DOMAIN: ${{ secrets.API_DOMAIN }}
         run: |
-          curl -X POST http://$API_DOMAIN:2095/api/v1/releases \
+          curl -X POST https://bima-version.steamlog.cloud/api/v1/releases \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $API_TOKEN" \
             -d "{
               \"version_name\": \"${{ env.VERSION_NAME }}\",
               \"build_number\": ${{ env.BUILD_NUMBER }},
-              \"apk_url\": \"http://$API_DOMAIN:2095/download/${{ env.APK_FILENAME }}\",
+              \"apk_url\": \"https://bima-version.steamlog.cloud/download/${{ env.APK_FILENAME }}\",
               \"release_notes\": \"${{ env.RELEASE_NOTES }}\",
               \"force_update\": ${{ env.FORCE_UPDATE }},
               \"channel\": \"stable\"
