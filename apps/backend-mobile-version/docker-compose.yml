@@ -9,8 +9,8 @@ services:
       - .env
     volumes:
       # Mount folder data dan storage dari VPS ke dalam container
-      - ./data:/app/data
-      - ./storage:/app/storage
+      - ../data:/app/data
+      - ../storage:/app/storage
     networks:
       - coolify
     labels:
