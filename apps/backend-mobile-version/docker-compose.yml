@@ -7,10 +7,12 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      - DB_DIR=/app/data
     volumes:
-      # Mount folder data dan storage dari VPS ke dalam container
-      - ../data:/app/data
-      - ../storage:/app/storage
+      # Gunakan Named Volumes agar Coolify menyimpannya secara permanen dan aman
+      - bima_data:/app/data
+      - bima_storage:/app/storage
     networks:
       - coolify
     labels:
@@ -24,3 +26,9 @@ services:
 networks:
   coolify:
     external: true
+
+volumes:
+  bima_data:
+    name: bima_api_data
+  bima_storage:
+    name: bima_api_storage
