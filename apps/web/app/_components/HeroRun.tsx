@@ -495,11 +495,11 @@ function GrafikLari(props: {
           {[100, 80, 60, 40].map((t) => (
             <span
               key={t}
-              className="t-readout absolute left-5 -translate-y-1/2 text-[0.62rem] text-kabut/80 sm:left-8"
+              className="t-readout absolute left-5 -translate-y-1/2 rounded bg-kukus/75 px-1 text-[0.62rem] text-kabut sm:left-8"
               style={{ top: `${(py(t) / T) * 100}%` }}
             >
               {t}
-              <span className="text-kabut/50">&deg;C</span>
+              <span className="text-kabut/60">&deg;C</span>
             </span>
           ))}
           {/* Ditaruh persis di atas pita steril supaya tidak pernah menimpa
