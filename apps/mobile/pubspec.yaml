@@ -1,7 +1,7 @@
 name: mobile
 description: "Aplikasi mobile monitoring IoT Bima Steamlog."
 publish_to: 'none'
-version: 0.1.0+12
+version: 0.2.0+13
 
 environment:
   sdk: ^3.11.4
@@ -27,4 +27,5 @@ dev_dependencies:
 flutter:
   assets:
     - shorebird.yaml
+    - assets/images/
   uses-material-design: true
