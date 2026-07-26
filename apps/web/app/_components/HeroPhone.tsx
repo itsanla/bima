@@ -30,28 +30,15 @@ export default function HeroPhone() {
         </Iphone>
       </div>
 
-      {/* Kartu keterangan disembunyikan di layar kecil: ruangnya tidak cukup
-          untuk menonjol keluar, dan layar HP-nya sendiri sudah menampilkan
-          angka yang sama. */}
-
-      {/* Pembacaan suhu */}
-      <div
-        aria-hidden="true"
-        className="kartu-layang absolute top-[248px] -left-[104px] hidden w-[126px] rounded-2xl px-3.5 py-2.5 sm:block"
-      >
-        <p className="text-[0.6rem] font-semibold tracking-wide text-abu uppercase">
-          Suhu sekarang
-        </p>
-        <p className="t-readout mt-0.5 text-[1.35rem] leading-none font-bold text-hijau-tua">
-          {k.suhu.toFixed(1)}
-          <span className="ml-0.5 align-top text-[0.75rem] text-abu">&deg;C</span>
-        </p>
-      </div>
+      {/* Kedua kartu ini sengaja hanya menyebut keadaan, bukan angka. Angka
+          suhu dan penghitung waktu sudah terbaca jelas di layar HP-nya, jadi
+          mengulangnya di samping cuma jadi hiasan. Kartunya juga disembunyikan
+          di layar kecil karena di sana tidak ada ruang untuk menonjol keluar. */}
 
       {/* Penanda steril, muncul hanya saat suhunya memang sudah tercapai */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[330px] -right-[80px] hidden items-center gap-2 rounded-full py-2 pr-3.5 pl-3 transition-opacity duration-500 sm:flex"
+        className="kartu-layang absolute top-[268px] -right-[86px] hidden items-center gap-2 rounded-full py-2 pr-3.5 pl-3 transition-opacity duration-500 sm:flex"
         style={{ opacity: k.steril ? 1 : 0 }}
       >
         <svg
@@ -73,7 +60,7 @@ export default function HeroPhone() {
       {/* Keadaan tungku */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[470px] -right-[88px] hidden items-center gap-2.5 rounded-full py-2.5 pr-4 pl-3 sm:flex"
+        className="kartu-layang absolute top-[452px] -right-[92px] hidden items-center gap-2.5 rounded-full py-2.5 pr-4 pl-3 sm:flex"
       >
         <span
           className="block h-2.5 w-2.5 shrink-0 rounded-full"
