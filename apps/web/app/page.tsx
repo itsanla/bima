@@ -1,3 +1,4 @@
+import Link from "next/link";
 import GrafikPengukusan from "./_components/GrafikPengukusan";
 import HeroPhone from "./_components/HeroPhone";
 import LogoInstansi from "./_components/LogoInstansi";
@@ -61,6 +62,12 @@ function Navigasi() {
           >
             Panduan
           </a>
+          <Link
+            href="/masuk"
+            className="rounded-full border border-garis px-4 py-2 text-[0.88rem] font-bold text-hijau-tua transition-colors hover:bg-mint"
+          >
+            Masuk
+          </Link>
           <a
             href={site.apk.url}
             className="rounded-full bg-hijau px-4.5 py-2 text-[0.88rem] font-bold text-white transition-colors hover:bg-hijau-tua"
@@ -367,6 +374,16 @@ function CaraPasang() {
             <div className="mt-5">
               <KartuQr gelap />
             </div>
+            <p className="mt-7 border-t border-white/12 pt-6 text-[0.94rem] text-white/70">
+              Pengelola alat juga bisa membuka data yang sama lewat peramban.{" "}
+              <Link
+                href="/masuk"
+                className="font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+              >
+                Masuk ke halaman monitoring
+              </Link>
+              .
+            </p>
           </Reveal>
 
           <ol className="space-y-3">
