@@ -84,16 +84,33 @@ function Hero() {
             {site.penyelenggara}
           </p>
 
-          <h1 className="t-display mt-5 max-w-[13ch] text-hijau-tua">
-            Pantau kukusan baglog{" "}
-            <span className="text-hijau">tanpa begadang</span>
+          {/* Judulnya adalah kepanjangan STEAMLOG. Huruf pembentuk akronimnya
+              diberi warna hijau supaya kapitalisasi ganjil pada stEAM dan
+              BagLOG terbaca sebagai maksud, bukan salah ketik. aria-label
+              dipakai supaya pembaca layar melafalkannya wajar. */}
+          <h1
+            className="t-display mt-5 max-w-[19ch] text-hijau-tua"
+            aria-label="Sistem Terintegrasi untuk Steam Sterilisasi Baglog Jamur"
+          >
+            <span className="text-hijau">S</span>istem{" "}
+            <span className="text-hijau">T</span>erintegrasi untuk st
+            <span className="text-hijau">EAM</span> Sterilisasi Bag
+            <span className="text-hijau">LOG</span> Jamur
           </h1>
 
-          <p className="t-lead mt-6 max-w-[44ch] text-abu">
-            Steamlog menampilkan suhu, lama pengukusan, dan nyala api dari alat
-            kukus langsung ke layar HP. Sterilisasi tetap terpantau walaupun
-            Anda sedang di rumah.
-          </p>
+          <div className="mt-6 max-w-[52ch] space-y-3.5 text-[1.02rem] leading-relaxed text-abu sm:text-[1.08rem]">
+            <p>
+              STEAMLOG merupakan sistem steamer sterilisasi baglog jamur
+              terintegrasi dengan sensor kontrol suhu yang termonitor secara
+              realtime dan dilengkapi dengan aplikasi Android sebagai antarmuka
+              pemantauan.
+            </p>
+            <p>
+              Secara skematis, sistem terdiri atas tiga komponen utama, yaitu
+              unit steamer sterilisasi baglog, sistem sensor dan kontrol, serta
+              aplikasi Android.
+            </p>
+          </div>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <UnduhButton />

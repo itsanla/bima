@@ -66,11 +66,15 @@
 @layer components {
   /* Skala tipografi ---------------------------------------------------- */
 
+  /* Dipakai hanya untuk judul hero. Ukurannya lebih tenang dari judul hero
+     pada umumnya karena isinya kepanjangan akronim yang panjang, bukan slogan
+     pendek: dipaksa besar, ia jadi lima baris dan mendorong tombol unduh
+     turun sampai keluar layar pertama. */
   .t-display {
     font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.02;
-    font-size: clamp(2.6rem, 5.6vw, 4.4rem);
+    letter-spacing: -0.03em;
+    line-height: 1.06;
+    font-size: clamp(2.05rem, 4.2vw, 3.35rem);
   }
 
   .t-section {
