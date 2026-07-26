@@ -85,7 +85,7 @@ function Hero() {
       />
 
       <div
-        className={`${WADAH} relative grid items-center gap-x-10 gap-y-2 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:pt-24`}
+        className={`${WADAH} relative grid items-center gap-x-8 gap-y-2 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_500px] lg:pt-24`}
       >
         <div className="pb-14 lg:pb-28">
           <p className="t-eyebrow flex items-center gap-2 text-hijau">
@@ -95,7 +95,7 @@ function Hero() {
 
           <h1 className="t-display mt-5 max-w-[13ch] text-hijau-tua">
             Pantau kukusan baglog{" "}
-            <span className="text-hijau">tanpa begadang</span>.
+            <span className="text-hijau">tanpa begadang.</span>
           </h1>
 
           <p className="t-lead mt-6 max-w-[44ch] text-abu">
@@ -115,8 +115,10 @@ function Hero() {
         </div>
 
         {/* HP sengaja dibiarkan terpotong tepi bawah pita, supaya hero terasa
-            menerus ke bagian berikutnya alih alih berhenti mendadak. */}
-        <div className="relative -mb-24 flex justify-center lg:-mb-32 lg:justify-end">
+            menerus ke bagian berikutnya alih alih berhenti mendadak. Kolomnya
+            dibuat lebih lebar dari HP-nya supaya kartu yang menonjol ke samping
+            tidak ikut terpotong. */}
+        <div className="relative -mb-28 flex justify-center lg:-mb-36">
           <HeroPhone />
         </div>
       </div>

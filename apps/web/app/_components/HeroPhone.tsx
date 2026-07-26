@@ -14,7 +14,7 @@ export default function HeroPhone() {
   const k = keadaanPada(jam);
 
   return (
-    <div className="relative mx-auto w-[300px] scale-[0.92] sm:scale-100 lg:scale-[1.06]">
+    <div className="relative mx-auto w-[300px] scale-[0.9] sm:scale-100">
       <div style={{ transform: "rotate(-5deg)" }}>
         <Iphone
           lebar={300}
@@ -30,10 +30,14 @@ export default function HeroPhone() {
         </Iphone>
       </div>
 
+      {/* Kartu keterangan disembunyikan di layar kecil: ruangnya tidak cukup
+          untuk menonjol keluar, dan layar HP-nya sendiri sudah menampilkan
+          angka yang sama. */}
+
       {/* Pembacaan suhu */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[122px] -left-10 rounded-2xl px-3.5 py-2.5 sm:-left-16"
+        className="kartu-layang absolute top-[176px] -left-[104px] hidden w-[136px] rounded-2xl px-3.5 py-2.5 sm:block"
       >
         <p className="text-[0.6rem] font-semibold tracking-wide text-abu uppercase">
           Suhu sekarang
@@ -44,29 +48,10 @@ export default function HeroPhone() {
         </p>
       </div>
 
-      {/* Keadaan tungku */}
-      <div
-        aria-hidden="true"
-        className="kartu-layang absolute top-[398px] -right-8 flex items-center gap-2.5 rounded-full py-2.5 pr-4 pl-3 sm:-right-14"
-      >
-        <span
-          className="block h-2.5 w-2.5 shrink-0 rounded-full"
-          style={{
-            background: k.apiMenyala ? "var(--color-api)" : "#9AA79E",
-            boxShadow: k.apiMenyala
-              ? "0 0 0 4px rgba(200,70,11,0.16)"
-              : "0 0 0 4px rgba(154,167,158,0.16)",
-          }}
-        />
-        <span className="text-[0.85rem] leading-none font-semibold whitespace-nowrap text-arang">
-          {k.apiMenyala ? "Api menyala" : "Api mati"}
-        </span>
-      </div>
-
       {/* Penanda steril, muncul hanya saat suhunya memang sudah tercapai */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[250px] -right-6 flex items-center gap-2 rounded-full py-2 pr-3.5 pl-3 transition-opacity duration-500 sm:-right-10"
+        className="kartu-layang absolute top-[292px] -right-[84px] hidden items-center gap-2 rounded-full py-2 pr-3.5 pl-3 transition-opacity duration-500 sm:flex"
         style={{ opacity: k.steril ? 1 : 0 }}
       >
         <svg
@@ -82,6 +67,25 @@ export default function HeroPhone() {
         </svg>
         <span className="text-[0.8rem] leading-none font-semibold whitespace-nowrap text-hijau-tua">
           Suhu steril
+        </span>
+      </div>
+
+      {/* Keadaan tungku */}
+      <div
+        aria-hidden="true"
+        className="kartu-layang absolute top-[412px] -right-[96px] hidden items-center gap-2.5 rounded-full py-2.5 pr-4 pl-3 sm:flex"
+      >
+        <span
+          className="block h-2.5 w-2.5 shrink-0 rounded-full"
+          style={{
+            background: k.apiMenyala ? "var(--color-api)" : "#9AA79E",
+            boxShadow: k.apiMenyala
+              ? "0 0 0 4px rgba(200,70,11,0.16)"
+              : "0 0 0 4px rgba(154,167,158,0.16)",
+          }}
+        />
+        <span className="text-[0.85rem] leading-none font-semibold whitespace-nowrap text-arang">
+          {k.apiMenyala ? "Api menyala" : "Api mati"}
         </span>
       </div>
     </div>

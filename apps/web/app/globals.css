@@ -108,10 +108,10 @@
      habis, jadi bentuknya betul betul organik, bukan gradasi buatan. */
   .tekstur-daun {
     background-image: url("/images/tekstur-daun.webp");
-    background-size: 130% auto;
-    background-position: 42% 18%;
+    background-size: 175% auto;
+    background-position: 58% 30%;
     mix-blend-mode: multiply;
-    opacity: 0.3;
+    opacity: 0.22;
   }
 
   /* Bingkai titanium iPhone -------------------------------------------- */
