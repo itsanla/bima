@@ -1,6 +1,7 @@
 import GrafikPengukusan from "./_components/GrafikPengukusan";
 import HeroPhone from "./_components/HeroPhone";
 import LogoInstansi from "./_components/LogoInstansi";
+import PanduanButton from "./_components/PanduanButton";
 import Reveal from "./_components/Reveal";
 import UnduhButton, { KartuQr } from "./_components/UnduhButton";
 import { kreditFoto, site } from "./_data/site";
@@ -48,9 +49,17 @@ function Navigasi() {
           </a>
           <a
             href="#tentang"
-            className="hidden text-[0.92rem] font-medium text-abu transition-colors hover:text-hijau-tua sm:block"
+            className="hidden text-[0.92rem] font-medium text-abu transition-colors hover:text-hijau-tua lg:block"
           >
             Tentang program
+          </a>
+          <a
+            href={site.panduan.url}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden text-[0.92rem] font-medium text-abu transition-colors hover:text-hijau-tua sm:block"
+          >
+            Panduan
           </a>
           <a
             href={site.apk.url}
@@ -351,8 +360,11 @@ function CaraPasang() {
               Steamlog dibagikan sebagai berkas APK dan belum melalui Play Store,
               jadi ada satu izin tambahan yang perlu dinyalakan sekali saja.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-4">
-              <UnduhButton varian="garis" />
+            <div className="mt-9 flex flex-wrap items-center gap-3.5">
+              <UnduhButton varian="putih" />
+              <PanduanButton varian="garisGelap" />
+            </div>
+            <div className="mt-5">
               <KartuQr gelap />
             </div>
           </Reveal>
@@ -483,8 +495,18 @@ function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-5 border-t border-white/12 pt-8 text-[0.82rem] text-white/60 sm:flex-row sm:items-start sm:justify-between">
-          <p>
-            {site.penyelenggara} / {site.domain}
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span>
+              {site.penyelenggara} / {site.domain}
+            </span>
+            <a
+              href={site.panduan.url}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-white/30 underline-offset-2 transition-colors hover:text-white"
+            >
+              Panduan penggunaan (PDF)
+            </a>
           </p>
           <p className="max-w-[46ch] sm:text-right">
             Foto jamur tiram oleh{" "}

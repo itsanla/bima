@@ -13,6 +13,12 @@ export const site = {
     ukuran: "48 MB",
     namaBerkas: "app-release.apk",
   },
+  /** Panduan pengguna aplikasi, PDF di Google Drive. Sudah diuji bisa dibuka
+   *  dan diunduh tanpa perlu masuk akun Google. */
+  panduan: {
+    url: "https://drive.google.com/file/d/1QItO_sWpe9OoGTZDWDVSwNx6JY5x0_Ka/view?usp=sharing",
+    halaman: 24,
+  },
 } as const;
 
 /** Kredit foto, satu baris per pemotret. Semua berlisensi CC BY-SA 4.0 lewat

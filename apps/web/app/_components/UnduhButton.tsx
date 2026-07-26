@@ -1,8 +1,9 @@
 import { site } from "../_data/site";
 
 const gaya = {
-  isi: "bg-hijau text-white hover:bg-hijau-tua", // tombol utama
-  garis: "border border-white/25 bg-white/10 text-white hover:bg-white/20", // di atas pita hijau tua
+  isi: "bg-hijau text-white hover:bg-hijau-tua", // tombol utama di atas latar terang
+  putih: "bg-white text-hijau-tua hover:bg-mint", // tombol utama di atas pita hijau tua
+  garis: "border border-white/25 bg-white/10 text-white hover:bg-white/20", // tombol kedua di atas pita hijau tua
 } as const;
 
 export default function UnduhButton({
