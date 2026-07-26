@@ -66,7 +66,7 @@ services:
     build:
       context: apps/web
       dockerfile: Dockerfile
-    image: itsanla/bima-fe:1.0.2
+    image: itsanla/bima-fe:1.0.3
     container_name: bima-frontend
     restart: always
     ports:

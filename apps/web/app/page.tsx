@@ -107,7 +107,7 @@ const kerugian = [
   },
   {
     judul: "Tidak ada catatan yang bisa dilihat ulang",
-    isi: "Tanpa rekaman suhu, tidak ada cara memastikan batch tadi malam benar sudah steril atau sempat turun panasnya.",
+    isi: "Tanpa rekaman suhu, tidak ada cara memastikan kukusan tadi malam sudah steril atau sempat kehilangan panas.",
   },
   {
     judul: "Ruginya baru terasa belakangan",
@@ -140,7 +140,7 @@ function Masalah() {
             <Reveal>
               <p className="t-label text-arang/50">Kenapa dipantau</p>
               <h2 className="t-section mt-5 max-w-[18ch]">
-                Satu tungku yang padam bisa menghabiskan satu batch.
+                Satu tungku yang padam bisa merusak seluruh baglog.
               </h2>
               <p className="t-lead mt-7 max-w-[52ch] text-arang/70">
                 Baglog harus dikukus pada panas tinggi dan ditahan lama supaya
