@@ -66,7 +66,7 @@ function Navigasi() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className={`${WADAH} pt-16 pb-20 sm:pt-24 lg:pt-28 lg:pb-28`}>
+      <div className={`${WADAH} pt-14 pb-12 sm:pt-20 lg:pt-24 lg:pb-16`}>
         <HeroRun>
           <p className="t-label text-steril">
             Program pemberdayaan masyarakat
@@ -120,17 +120,21 @@ function Masalah() {
     <section className="bg-kertas text-arang">
       <div className={`${WADAH} py-20 sm:py-28`}>
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-16">
-          <Reveal>
-            <img
-              src="/images/jamur-baglog.webp"
-              alt="Jamur tiram putih tumbuh keluar dari mulut baglog di dalam kumbung."
-              width={900}
-              height={1200}
-              className="aspect-[3/4] w-full rounded-3xl bg-kukus object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          </Reveal>
+          {/* Foto dibuat menempel supaya kolom kiri tidak menyisakan ruang
+              kosong panjang saat daftar di kanan lebih tinggi. */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <Reveal>
+              <img
+                src="/images/jamur-baglog.webp"
+                alt="Jamur tiram putih tumbuh keluar dari mulut baglog di dalam kumbung."
+                width={900}
+                height={1200}
+                className="aspect-[3/4] w-full rounded-3xl bg-kukus object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </Reveal>
+          </div>
 
           <div className="lg:pt-6">
             <Reveal>
@@ -398,8 +402,8 @@ function Footer() {
           <p className="max-w-[46ch] sm:text-right">
             Foto jamur tiram oleh{" "}
             {kreditFoto.map((f, i) => (
-              <span key={f.berkas}>
-                {i > 0 && ", "}
+              <span key={f.pemotret}>
+                {i > 0 && " dan "}
                 <a
                   href={f.url}
                   target="_blank"

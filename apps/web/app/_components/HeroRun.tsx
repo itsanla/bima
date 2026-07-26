@@ -50,13 +50,16 @@ function jamKeWaktu(jam: number): string {
 
 const L = 1000; // lebar viewBox
 const T = 240; // tinggi viewBox
-const ATAS = 20;
-const BAWAH = 40;
+const ATAS = 18;
+const BAWAH = 16;
 const PLOT = T - ATAS - BAWAH;
-const SUHU_MIN = 20;
-const SUHU_MAKS = 105;
+const SUHU_MIN = 24;
+const SUHU_MAKS = 104;
 
-const px = (jam: number) => (jam / TOTAL_JAM) * L;
+/* Kurva disisipkan sedikit dari tepi supaya titik pembacaan di awal dan akhir
+   tidak terpotong oleh batas pita. */
+const TEPI = 7;
+const px = (jam: number) => TEPI + (jam / TOTAL_JAM) * (L - TEPI * 2);
 const py = (suhu: number) =>
   ATAS + (1 - (suhu - SUHU_MIN) / (SUHU_MAKS - SUHU_MIN)) * PLOT;
 
@@ -70,7 +73,7 @@ const JALUR_SUHU = (() => {
   return `M ${titik.join(" L ")}`;
 })();
 
-const JALUR_ARSIR = `${JALUR_SUHU} L ${L},${ATAS + PLOT} L 0,${ATAS + PLOT} Z`;
+const JALUR_ARSIR = `${JALUR_SUHU} L ${px(TOTAL_JAM)},${ATAS + PLOT} L ${px(0)},${ATAS + PLOT} Z`;
 
 /* ========================================================================== */
 
@@ -384,7 +387,7 @@ function GrafikLari(props: {
     <div className="mx-[calc(50%_-_50vw)] mt-16 border-y border-kukus-3 bg-kukus-2/35 lg:mt-24">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-kukus-3/60 px-5 py-3 sm:px-8">
         <p className="t-label text-kabut">
-          Satu kali pengukusan / 8 jam / diputar dalam 45 detik
+          Satu kali pengukusan / 8 jam dalam 45 detik
         </p>
         <p className="t-label" style={{ color: keadaan.warna }}>
           {keadaan.teks}

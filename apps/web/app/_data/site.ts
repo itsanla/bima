@@ -13,20 +13,14 @@ export const site = {
   },
 } as const;
 
-/** Kredit foto. Semua berlisensi CC BY-SA 4.0 lewat Wikimedia Commons. */
+/** Kredit foto, satu baris per pemotret. Semua berlisensi CC BY-SA 4.0 lewat
+ *  Wikimedia Commons. */
 export const kreditFoto = [
   {
-    berkas: "Foto Jamur Tiram Tampak Permukaaan.jpg",
     pemotret: "CatatanLagitBiru",
-    url: "https://commons.wikimedia.org/wiki/File:Foto_Jamur_Tiram_Tampak_Permukaaan.jpg",
+    url: "https://commons.wikimedia.org/wiki/User:CatatanLagitBiru",
   },
   {
-    berkas: "Sekumpulan Jamur Tiram Budidaya.jpg",
-    pemotret: "CatatanLagitBiru",
-    url: "https://commons.wikimedia.org/wiki/File:Sekumpulan_Jamur_Tiram_Budidaya.jpg",
-  },
-  {
-    berkas: "Jamur Tiram.jpg",
     pemotret: "Astari28",
     url: "https://commons.wikimedia.org/wiki/File:Jamur_Tiram.jpg",
   },
