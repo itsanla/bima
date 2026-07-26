@@ -404,7 +404,8 @@ function GrafikLari(props: {
         >
           <defs>
             <linearGradient id="arsirSuhu" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-api)" stopOpacity="0.3" />
+              <stop offset="0%" stopColor="var(--color-api)" stopOpacity="0.18" />
+              <stop offset="55%" stopColor="var(--color-api)" stopOpacity="0.04" />
               <stop offset="100%" stopColor="var(--color-api)" stopOpacity="0" />
             </linearGradient>
             <clipPath id="majuKlip">
@@ -455,7 +456,7 @@ function GrafikLari(props: {
               d={JALUR_SUHU}
               fill="none"
               stroke="var(--color-uap)"
-              strokeWidth="2"
+              strokeWidth="2.25"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -463,34 +464,30 @@ function GrafikLari(props: {
           </g>
 
           {/* Garis tegak posisi sekarang */}
-          {!diam && (
-            <line
-              x1={x}
-              x2={x}
-              y1={ATAS}
-              y2={ATAS + PLOT}
-              stroke="var(--color-uap)"
-              strokeWidth="1"
-              opacity="0.22"
-              vectorEffect="non-scaling-stroke"
-            />
-          )}
+          <line
+            x1={x}
+            x2={x}
+            y1={ATAS}
+            y2={ATAS + PLOT}
+            stroke="var(--color-uap)"
+            strokeWidth="1"
+            opacity="0.22"
+            vectorEffect="non-scaling-stroke"
+          />
         </svg>
 
         {/* Titik pembacaan dipasang sebagai elemen HTML supaya tetap bulat
             walau viewBox grafik ditarik melebar. */}
-        {!diam && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute block h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              left: `${(x / L) * 100}%`,
-              top: `${(y / T) * 100}%`,
-              background: steril ? "var(--color-steril)" : "var(--color-api)",
-              boxShadow: `0 0 0 6px ${steril ? "rgba(111,227,162,0.2)" : "rgba(255,122,47,0.2)"}`,
-            }}
-          />
-        )}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute block h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{
+            left: `${(x / L) * 100}%`,
+            top: `${(y / T) * 100}%`,
+            background: steril ? "var(--color-steril)" : "var(--color-api)",
+            boxShadow: `0 0 0 6px ${steril ? "rgba(111,227,162,0.2)" : "rgba(255,122,47,0.2)"}`,
+          }}
+        />
 
         {/* Skala suhu, ditulis sebagai teks HTML supaya tidak ikut melar
             bersama viewBox grafik. */}
@@ -505,9 +502,11 @@ function GrafikLari(props: {
               <span className="text-kabut/50">&deg;C</span>
             </span>
           ))}
+          {/* Ditaruh persis di atas pita steril supaya tidak pernah menimpa
+              kurva, yang hampir selalu berjalan di dalam pita itu. */}
           <span
-            className="t-label absolute right-5 -translate-y-1/2 text-steril/80 sm:right-8"
-            style={{ top: `${((py(100) + py(AMBANG_STERIL)) / 2 / T) * 100}%` }}
+            className="t-label absolute right-5 -translate-y-full pb-1 text-steril/85 sm:right-8"
+            style={{ top: `${(py(100) / T) * 100}%` }}
           >
             Zona steril
           </span>
