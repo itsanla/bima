@@ -1,5 +1,7 @@
 export const site = {
-  nama: "Bima",
+  /* Nama sistemnya adalah Steamlog. "Bima" adalah nama skema pendanaannya,
+     jadi hanya muncul sebagai salah satu lambang lembaga, bukan nama produk. */
+  nama: "Steamlog",
   domain: "steamlog.cloud",
   judulProgram:
     "Pemberdayaan Kelompok Usaha Jamur Tiram melalui Implementasi Smart Monitoring Suhu Sterilisasi Baglog Berbasis Android",

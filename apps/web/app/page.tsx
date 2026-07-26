@@ -1,5 +1,6 @@
 import GrafikPengukusan from "./_components/GrafikPengukusan";
 import HeroPhone from "./_components/HeroPhone";
+import LogoInstansi from "./_components/LogoInstansi";
 import Reveal from "./_components/Reveal";
 import UnduhButton, { KartuQr } from "./_components/UnduhButton";
 import { kreditFoto, site } from "./_data/site";
@@ -30,21 +31,11 @@ function Navigasi() {
   return (
     <header className="sticky top-0 z-50 border-b border-garis bg-white/85 backdrop-blur-md">
       <nav className={`${WADAH} flex h-16 items-center justify-between gap-4`}>
-        <a href="#isi" className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center rounded-[0.6rem] bg-hijau-tua">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-              <path
-                d="M4 18C6.4 18 7.2 8.6 10 8.6h10"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              />
-              <circle cx="4.4" cy="18" r="2" fill="#c8460b" />
-            </svg>
-          </span>
-          <span className="text-[1.1rem] font-extrabold tracking-[-0.03em] text-hijau-tua">
-            Bima
+        <a href="#isi" className="flex min-w-0 items-center gap-2.5 sm:gap-3.5">
+          <LogoInstansi tinggi={28} className="shrink-0" />
+          <span aria-hidden="true" className="h-7 w-px shrink-0 bg-garis" />
+          <span className="text-[1.05rem] font-extrabold tracking-[-0.03em] text-hijau-tua sm:text-[1.1rem]">
+            Steamlog
           </span>
         </a>
 
@@ -99,7 +90,7 @@ function Hero() {
           </h1>
 
           <p className="t-lead mt-6 max-w-[44ch] text-abu">
-            Bima menampilkan suhu, lama pengukusan, dan nyala api dari alat
+            Steamlog menampilkan suhu, lama pengukusan, dan nyala api dari alat
             kukus langsung ke layar HP. Sterilisasi tetap terpantau walaupun
             Anda sedang di rumah.
           </p>
@@ -325,7 +316,7 @@ const langkah = [
     isi: "Android akan menahan pemasangan dari luar Play Store. Pada peringatan yang muncul, pilih Setelan, lalu nyalakan Izinkan dari sumber ini untuk peramban yang Anda pakai, dan kembali untuk menekan Pasang.",
   },
   {
-    judul: "Buka Bima",
+    judul: "Buka Steamlog",
     isi: "Setelah terpasang, buka aplikasinya. Layar monitoring langsung tampil, tanpa perlu mendaftar atau memasukkan alamat server.",
   },
 ];
@@ -340,7 +331,7 @@ function CaraPasang() {
               Tiga langkah, sekitar dua menit
             </h2>
             <p className="mt-6 max-w-[40ch] text-white/70">
-              Bima dibagikan sebagai berkas APK dan belum melalui Play Store,
+              Steamlog dibagikan sebagai berkas APK dan belum melalui Play Store,
               jadi ada satu izin tambahan yang perlu dinyalakan sekali saja.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -386,7 +377,7 @@ function TentangProgram() {
             {site.judulProgram}
           </h2>
           <p className="t-lead mt-7 max-w-[56ch] text-abu">
-            Bima dikembangkan sebagai bagian dari program pemberdayaan kelompok
+            Steamlog dikembangkan sebagai bagian dari program pemberdayaan kelompok
             usaha jamur tiram yang diselenggarakan {site.penyelenggara}. Alat
             pengukus baglog dipasangi sensor suhu, hasil bacaannya dikirim ke
             server, lalu ditampilkan di aplikasi Android supaya petani bisa
@@ -420,7 +411,18 @@ function TentangProgram() {
         </div>
 
         <Reveal>
-          <div className="mt-12 grid gap-8 border-t border-garis pt-10 sm:grid-cols-3">
+          <div className="mt-12 flex flex-col gap-6 rounded-3xl border border-garis bg-kabut px-7 py-7 sm:flex-row sm:items-center sm:gap-9">
+            <LogoInstansi tinggi={64} className="shrink-0" />
+            <p className="max-w-[46ch] text-[0.95rem] text-abu">
+              Steamlog adalah nama sistemnya. BIMA adalah skema pendanaan yang
+              membiayai program ini, dan Politeknik Negeri Padang adalah
+              penyelenggaranya.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-10 grid gap-8 border-t border-garis pt-10 sm:grid-cols-3">
             {[
               ["Penyelenggara", site.penyelenggara],
               ["Sasaran", "Kelompok usaha jamur tiram"],
@@ -447,7 +449,7 @@ function Footer() {
         <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[1.5rem] font-extrabold tracking-[-0.03em]">
-              Bima
+              Steamlog
             </p>
             <p className="mt-2 max-w-[32ch] text-[0.92rem] text-white/65">
               Monitoring suhu sterilisasi baglog untuk kelompok usaha jamur

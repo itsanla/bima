@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import IotTestMonitor from "../_components/IotTestMonitor";
 
 export const metadata: Metadata = {
-  title: "Bima - Live IoT Test Monitor",
+  title: "Steamlog - Live IoT Test Monitor",
   description:
     "Monitor koneksi WebSocket (WSS/WS) dan HTTP/HTTPS perangkat IoT secara real-time.",
   robots: { index: false, follow: false },

@@ -18,7 +18,7 @@ export default function HeroPhone() {
       <div style={{ transform: "rotate(-4deg)" }}>
         <Iphone
           lebar={300}
-          label={`Aplikasi Bima di layar HP, menampilkan suhu ${k.suhu.toFixed(1)} derajat Celsius dan lama pengukusan ${Math.floor(jam)} jam.`}
+          label={`Aplikasi Steamlog di layar HP, menampilkan suhu ${k.suhu.toFixed(1)} derajat Celsius dan lama pengukusan ${Math.floor(jam)} jam.`}
         >
           <LayarApp
             suhu={k.suhu}

@@ -22,10 +22,10 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${site.domain}`),
-  title: "Bima - pantau kukusan baglog dari layar HP",
+  title: "Steamlog - pantau kukusan baglog dari layar HP",
   description:
     "Aplikasi Android untuk memantau suhu, lama pengukusan, dan nyala api pada alat sterilisasi baglog jamur tiram. Program pemberdayaan Politeknik Negeri Padang.",
-  applicationName: "Bima",
+  applicationName: "Steamlog",
   keywords: [
     "jamur tiram",
     "baglog",
@@ -38,15 +38,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: `https://${site.domain}`,
-    siteName: "Bima",
-    title: "Bima - pantau kukusan baglog dari layar HP",
+    siteName: "Steamlog",
+    title: "Steamlog - pantau kukusan baglog dari layar HP",
     description:
       "Suhu, lama pengukusan, dan nyala api dari alat kukus baglog, tampil langsung di HP.",
     images: [{ url: "/og.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bima - pantau kukusan baglog dari layar HP",
+    title: "Steamlog - pantau kukusan baglog dari layar HP",
     description:
       "Suhu, lama pengukusan, dan nyala api dari alat kukus baglog, tampil langsung di HP.",
     images: ["/og.jpg"],

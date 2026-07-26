@@ -106,7 +106,7 @@ export default function LayarApp({
             className="t-readout mt-2 flex items-center justify-between border-t pt-1.5 text-[8.5px]"
             style={{ borderColor: app.garis, color: app.teksAbu }}
           >
-            <span>BIMA-01</span>
+            <span>STEAMLOG-01</span>
             <span>{jamKeWaktu(jam)} berjalan</span>
           </div>
         </div>
