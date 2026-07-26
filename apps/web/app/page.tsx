@@ -160,7 +160,7 @@ function Grafik() {
         <Reveal>
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <h2 className="t-section max-w-[16ch] text-hijau-tua">
-              Bentuk satu kali pengukusan yang benar.
+              Bentuk satu kali pengukusan yang benar
             </h2>
             <p className="max-w-[40ch] text-abu">
               Suhu naik cepat di jam pertama, lalu ditahan di zona steril selama
@@ -217,7 +217,7 @@ function Masalah() {
           <div>
             <Reveal>
               <h2 className="t-section max-w-[17ch] text-hijau-tua">
-                Satu tungku yang padam bisa merusak seluruh baglog.
+                Satu tungku yang padam bisa merusak seluruh baglog
               </h2>
               <p className="t-lead mt-6 max-w-[50ch] text-abu">
                 Baglog harus dikukus pada panas tinggi dan ditahan lama supaya
@@ -254,7 +254,7 @@ function YangDipantau() {
       <div className={`${WADAH} py-20 sm:py-24`}>
         <Reveal>
           <h2 className="t-section max-w-[19ch] text-hijau-tua">
-            Semuanya muat dalam satu layar.
+            Semuanya muat dalam satu layar
           </h2>
           <p className="t-lead mt-5 max-w-[52ch] text-abu">
             Tidak ada menu bertingkat, tidak ada pendaftaran akun, dan tidak ada
@@ -337,7 +337,7 @@ function CaraPasang() {
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-20">
           <Reveal>
             <h2 className="t-section max-w-[13ch]">
-              Tiga langkah, sekitar dua menit.
+              Tiga langkah, sekitar dua menit
             </h2>
             <p className="mt-6 max-w-[40ch] text-white/70">
               Bima dibagikan sebagai berkas APK dan belum melalui Play Store,
