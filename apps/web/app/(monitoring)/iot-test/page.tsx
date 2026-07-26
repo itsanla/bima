@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import IotTestMonitor from "../_components/IotTestMonitor";
+import IotTestMonitor from "../../_components/IotTestMonitor";
 
 export const metadata: Metadata = {
   title: "Steamlog - Live IoT Test Monitor",
