@@ -1,24 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Bricolage_Grotesque,
-  IBM_Plex_Mono,
-  Instrument_Sans,
-} from "next/font/google";
+import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "./_data/site";
 
-const bricolage = Bricolage_Grotesque({
+/* Plus Jakarta Sans dipakai untuk seluruh halaman. Huruf ini dirancang
+   Tokotype untuk identitas kota Jakarta, jadi ada alasan yang jelas kenapa
+   sebuah program Indonesia memakainya, bukan sekadar pilihan netral. */
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-bricolage",
+  variable: "--font-jakarta",
 });
 
-const instrument = Instrument_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-instrument",
-});
-
+/* Mono hanya untuk angka pembacaan alat: suhu, penghitung waktu, sumbu grafik. */
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -60,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a1f17",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
@@ -69,7 +63,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${bricolage.variable} ${instrument.variable} ${plexMono.variable}`}
+      className={`${jakarta.variable} ${plexMono.variable}`}
     >
       <body>
         {/* Tanpa JavaScript, isi yang menunggu animasi masuk layar tetap harus

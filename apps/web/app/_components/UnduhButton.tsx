@@ -1,12 +1,12 @@
 import { site } from "../_data/site";
 
 const gaya = {
-  terang: "bg-uap text-arang hover:bg-white", // dipakai di atas latar gelap
-  gelap: "bg-kukus text-uap hover:bg-kukus-2", // dipakai di atas latar terang
+  isi: "bg-hijau text-white hover:bg-hijau-tua", // tombol utama
+  garis: "border border-white/25 bg-white/10 text-white hover:bg-white/20", // di atas pita hijau tua
 } as const;
 
 export default function UnduhButton({
-  varian = "terang",
+  varian = "isi",
   label = "Unduh aplikasi Android",
   className = "",
 }: {
@@ -17,14 +17,14 @@ export default function UnduhButton({
   return (
     <a
       href={site.apk.url}
-      className={`group inline-flex items-center gap-3 rounded-full px-7 py-4 text-[0.98rem] font-semibold tracking-tight transition-colors duration-200 ${gaya[varian]} ${className}`}
+      className={`group inline-flex items-center gap-2.5 rounded-full px-6 py-3.5 text-[0.97rem] font-bold tracking-tight transition-colors duration-200 ${gaya[varian]} ${className}`}
     >
       <svg
         viewBox="0 0 20 20"
         className="h-[1.05rem] w-[1.05rem] transition-transform duration-300 group-hover:translate-y-0.5"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.9"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden="true"
@@ -36,10 +36,29 @@ export default function UnduhButton({
   );
 }
 
-export function UnduhKeterangan({ className = "" }: { className?: string }) {
+/** Kartu QR. Disembunyikan di layar kecil karena pengunjungnya memang sudah
+ *  memegang HP, jadi memindai layarnya sendiri tidak masuk akal.
+ *  Kode QR selalu gelap di atas ubin putih, apa pun warna latar sekitarnya,
+ *  karena itu syarat supaya pemindai bisa membacanya. */
+export function KartuQr({ gelap = false }: { gelap?: boolean }) {
   return (
-    <p className={`t-readout text-[0.78rem] ${className}`}>
-      {site.apk.namaBerkas} / {site.apk.ukuran} / versi {site.apk.versi}
-    </p>
+    <div
+      className={`hidden items-center gap-3.5 rounded-2xl border p-3 sm:flex ${
+        gelap
+          ? "border-white/20 bg-white/10 text-white/75"
+          : "border-garis bg-white text-abu"
+      }`}
+    >
+      <img
+        src="/images/qr-steamlog.svg"
+        alt="Kode QR menuju steamlog.cloud"
+        width={64}
+        height={64}
+        className="h-16 w-16 rounded-md bg-white p-0.5"
+      />
+      <p className="max-w-[9rem] text-[0.78rem] leading-snug">
+        Pindai untuk membuka halaman ini di HP
+      </p>
+    </div>
   );
 }

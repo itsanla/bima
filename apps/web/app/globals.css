@@ -2,25 +2,26 @@
 
 /* ==========================================================================
    Bima - sistem desain landing page
-   Palet diturunkan dari dunia alat itu sendiri: ruang kukus yang gelap dan
-   lembap, uap yang putih, bara api yang jingga, dan hijau mint yang hanya
-   dipakai ketika suhu steril sudah tercapai. Dua warna aksen di halaman ini
-   punya arti yang sama persis dengan arti warna di aplikasi.
+
+   Dasar halaman putih dengan hijau sebagai identitas. Hijau dipakai dua
+   tingkat: hijau tua untuk judul dan pita gelap, hijau brand untuk tombol
+   dan penanda. Jingga bara hanya muncul sebagai keadaan data "api menyala",
+   arti yang sama persis dengan warna di aplikasinya.
    ========================================================================== */
 
 @theme {
-  --color-kukus: #0a1f17; /* ruang kukus, permukaan gelap utama */
-  --color-kukus-2: #0f2c21; /* kartu di atas permukaan gelap */
-  --color-kukus-3: #1c4132; /* garis batas di atas permukaan gelap */
-  --color-uap: #eff4ee; /* uap, teks di atas gelap */
-  --color-kertas: #e7ece5; /* permukaan terang */
-  --color-arang: #0b1810; /* teks di atas terang */
-  --color-api: #ff7a2f; /* bara: api menyala */
-  --color-steril: #6fe3a2; /* mint: suhu steril tercapai */
-  --color-kabut: #94ab9e; /* sage redup: keterangan, sumbu, satuan */
+  --color-putih: #ffffff;
+  --color-kabut: #f4f7f1; /* pita terang antar bagian */
+  --color-mint: #e9f1e6; /* pita hero */
+  --color-hijau: #14713a; /* hijau brand: tombol, penanda */
+  --color-hijau-tua: #0a3520; /* hijau pekat: judul, pita gelap */
+  --color-hijau-muda: #d7e8d6; /* alas chip di atas terang */
+  --color-arang: #14231b; /* teks utama di atas terang */
+  --color-abu: #5f7268; /* teks pendukung */
+  --color-garis: #dbe5d7; /* garis rambut di atas terang */
+  --color-api: #c8460b; /* bara: api menyala */
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
@@ -37,13 +38,12 @@
   }
 
   body {
-    background-color: var(--color-kukus);
-    color: var(--color-uap);
+    background-color: var(--color-putih);
+    color: var(--color-arang);
     font-family: var(--font-sans);
     font-size: 1.0625rem;
-    line-height: 1.65;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
 
   img {
@@ -52,12 +52,10 @@
   }
 
   ::selection {
-    background: var(--color-steril);
-    color: var(--color-kukus);
+    background: var(--color-hijau-muda);
+    color: var(--color-hijau-tua);
   }
 
-  /* currentColor dipakai supaya cincin fokus selalu kontras, baik di bagian
-     halaman yang gelap maupun yang terang. */
   :focus-visible {
     outline: 3px solid currentColor;
     outline-offset: 3px;
@@ -65,45 +63,39 @@
   }
 }
 
-/* Skala tipografi. Ditaruh di layer components supaya utilitas Tailwind yang
-   dipakai bersamaan tetap bisa menimpanya. */
 @layer components {
+  /* Skala tipografi ---------------------------------------------------- */
+
   .t-display {
-    font-family: var(--font-display);
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 0.94;
-    font-size: clamp(2.75rem, 8.2vw, 6rem);
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    font-size: clamp(2.6rem, 5.6vw, 4.4rem);
   }
 
   .t-section {
-    font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: -0.03em;
-    line-height: 1.02;
-    font-size: clamp(1.9rem, 4.4vw, 3.15rem);
+    line-height: 1.08;
+    font-size: clamp(1.8rem, 3.4vw, 2.7rem);
   }
 
   .t-card {
-    font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    font-size: 1.3rem;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    font-size: 1.18rem;
   }
 
   .t-lead {
-    font-size: clamp(1.05rem, 1.9vw, 1.3rem);
-    line-height: 1.55;
+    font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+    line-height: 1.6;
   }
 
-  /* Label utilitas: satuan, sumbu grafik, eyebrow. Selalu mono. */
-  .t-label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+  .t-eyebrow {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
   .t-readout {
@@ -112,22 +104,57 @@
     font-feature-settings: "tnum";
   }
 
+  /* Bayangan daun di pita hero. Diambil dari foto rak baglog yang diburamkan
+     habis, jadi bentuknya betul betul organik, bukan gradasi buatan. */
+  .tekstur-daun {
+    background-image: url("/images/tekstur-daun.webp");
+    background-size: 130% auto;
+    background-position: 42% 18%;
+    mix-blend-mode: multiply;
+    opacity: 0.3;
+  }
+
+  /* Bingkai titanium iPhone -------------------------------------------- */
+
+  .rangka-titanium {
+    background: linear-gradient(
+      142deg,
+      #e4e7e3 0%,
+      #9aa19b 14%,
+      #f4f6f2 27%,
+      #848b85 43%,
+      #dfe3dd 58%,
+      #7f867f 74%,
+      #eef0ec 88%,
+      #989f99 100%
+    );
+  }
+
+  /* Kartu mengambang di atas HP */
+  .kartu-layang {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(6px);
+    box-shadow:
+      0 1px 2px rgba(10, 53, 32, 0.06),
+      0 12px 28px -10px rgba(10, 53, 32, 0.22);
+  }
+
+  /* Gerak --------------------------------------------------------------- */
+
   .reveal {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
   }
 
   .reveal[data-shown="true"] {
-    animation: bima-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: bima-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
-
-/* Gerak -------------------------------------------------------------------- */
 
 @keyframes bima-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
