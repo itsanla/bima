@@ -1,25 +1,148 @@
 @import "tailwindcss";
-/* Global baseline — shared across the whole app */
-:root {
-  --primary: #252525;
-  --dark: #1d1d1d;
-  --accent: #c49c74;
-  --bg-section: #f0efef;
-  --text-baby: #f6f6f6;
-  --muted: #c9beb3;
+
+/* ==========================================================================
+   Bima - sistem desain landing page
+   Palet diturunkan dari dunia alat itu sendiri: ruang kukus yang gelap dan
+   lembap, uap yang putih, bara api yang jingga, dan hijau mint yang hanya
+   dipakai ketika suhu steril sudah tercapai. Dua warna aksen di halaman ini
+   punya arti yang sama persis dengan arti warna di aplikasi.
+   ========================================================================== */
+
+@theme {
+  --color-kukus: #0a1f17; /* ruang kukus, permukaan gelap utama */
+  --color-kukus-2: #0f2c21; /* kartu di atas permukaan gelap */
+  --color-kukus-3: #1c4132; /* garis batas di atas permukaan gelap */
+  --color-uap: #eff4ee; /* uap, teks di atas gelap */
+  --color-kertas: #e7ece5; /* permukaan terang */
+  --color-arang: #0b1810; /* teks di atas terang */
+  --color-api: #ff7a2f; /* bara: api menyala */
+  --color-steril: #6fe3a2; /* mint: suhu steril tercapai */
+  --color-kabut: #94ab9e; /* sage redup: keterangan, sumbu, satuan */
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-kukus);
+    color: var(--color-uap);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  ::selection {
+    background: var(--color-steril);
+    color: var(--color-kukus);
+  }
+
+  /* currentColor dipakai supaya cincin fokus selalu kontras, baik di bagian
+     halaman yang gelap maupun yang terang. */
+  :focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
+/* Skala tipografi. Ditaruh di layer components supaya utilitas Tailwind yang
+   dipakai bersamaan tetap bisa menimpanya. */
+@layer components {
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.94;
+    font-size: clamp(2.75rem, 8.2vw, 6rem);
+  }
+
+  .t-section {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    font-size: clamp(1.9rem, 4.4vw, 3.15rem);
+  }
+
+  .t-card {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    font-size: 1.3rem;
+  }
+
+  .t-lead {
+    font-size: clamp(1.05rem, 1.9vw, 1.3rem);
+    line-height: 1.55;
+  }
+
+  /* Label utilitas: satuan, sumbu grafik, eyebrow. Selalu mono. */
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .t-readout {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .reveal[data-shown="true"] {
+    animation: bima-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
 }
 
-img {
-  max-width: 100%;
-  height: auto;
+/* Gerak -------------------------------------------------------------------- */
+
+@keyframes bima-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .reveal[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
