@@ -30,3 +30,49 @@ model IotLog {
   air_habis Boolean
   createdAt DateTime @default(now())
 }
+
+/// Pengguna web monitoring. Peran disimpan sebagai teks ("ADMIN" atau
+/// "MONITOR") alih alih enum supaya penambahan tabel ini ke basis data yang
+/// sudah berisi data tetap murni aditif dan tidak perlu membuat tipe baru.
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         String    @default("MONITOR")
+  /// Akun monitor baru bisa masuk setelah tautan verifikasi diklik.
+  /// Akun admin yang disemai dari env langsung terverifikasi.
+  emailVerified Boolean  @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sessions     Session[]
+  verifications EmailVerification[]
+
+  @@index([role])
+}
+
+/// Sesi login. Yang disimpan hanya hash token, bukan tokennya, supaya bocornya
+/// isi tabel ini tidak langsung berarti akun bisa diambil alih.
+model Session {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model EmailVerification {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

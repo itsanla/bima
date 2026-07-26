@@ -18,7 +18,7 @@ services:
     build:
       context: apps/api
       dockerfile: Dockerfile
-    image: itsanla/bima:1.1.1
+    image: itsanla/bima:1.2.0
     container_name: bima-backend
     restart: always
     ports:
@@ -28,6 +28,27 @@ services:
       - PORT=8081
       - DATABASE_URL=postgresql://bima:bimapassword@bima-postgres:5432/bima_db?schema=public&sslmode=disable
       - IOT_LOG_FLUSH_INTERVAL_MS=30000
+      # Asal yang boleh memanggil API dari peramban, dan alamat web untuk
+      # menyusun tautan verifikasi di email.
+      - WEB_ORIGINS=https://steamlog.cloud
+      - WEB_URL=https://steamlog.cloud
+      # Cookie sesi dipasang di domain induk supaya ikut terkirim dari
+      # steamlog.cloud ke api.steamlog.cloud.
+      - COOKIE_DOMAIN=.steamlog.cloud
+      # Admin pertama. Dibuat otomatis hanya kalau belum ada admin sama sekali,
+      # dan kata sandinya tidak pernah menimpa yang sudah diganti lewat aplikasi.
+      - ADMIN_NAME=Administrator
+      - ADMIN_EMAIL=admin@steamlog.cloud
+      - ADMIN_PASSWORD=SteamlogAdmin2026
+      # SMTP Gmail untuk email verifikasi. Selama SMTP_USER dan SMTP_PASS masih
+      # kosong, pendaftaran tetap jalan dan tautan verifikasinya ditulis ke log
+      # container supaya alurnya tetap bisa diuji.
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=465
+      - SMTP_SECURE=true
+      - SMTP_USER=
+      - SMTP_PASS=
+      - SMTP_FROM=Steamlog <no-reply@steamlog.cloud>
     networks:
       - bima-net
       - coolify

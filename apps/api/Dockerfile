@@ -28,5 +28,8 @@ RUN npx prisma generate
 # Copy built files
 COPY --from=builder /app/dist ./dist
 
-# Start server
-CMD ["npm", "start"]
+# Skema disamakan dengan basis data setiap kali container hidup. Perubahan yang
+# aditif (menambah tabel atau kolom) diterapkan sendiri, sedangkan perubahan
+# yang bisa menghilangkan data akan ditolak prisma dan container gagal start.
+# Gagal dengan berisik lebih baik daripada data hilang diam diam.
+CMD ["sh", "-c", "npx prisma db push --skip-generate && npm start"]

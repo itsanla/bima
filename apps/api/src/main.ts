@@ -2,6 +2,11 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import logger from 'jet-logger';
 import prisma from './db/prisma';
+import { penggunaDariPermintaan } from './lib/auth';
+import { kirimGagal, pasangCors } from './lib/http';
+import { semaiAdmin } from './lib/seed';
+import { tanganiAuth } from './routes/auth';
+import { tanganiUsers } from './routes/users';
 
 import wsServer from './websocket/wsServer';
 
@@ -66,6 +71,27 @@ setInterval(async () => {
 const server = createServer(async (req, res) => {
   const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
   const pathname = url.pathname;
+
+  // Web dan API ada di subdomain berbeda, jadi tanpa header ini peramban akan
+  // menolak semua permintaan dari halaman monitoring.
+  if (pasangCors(req, res)) return;
+
+  if (await tanganiAuth(req, res, pathname)) return;
+  if (await tanganiUsers(req, res, pathname)) return;
+
+  // Pembacaan data hanya untuk yang sudah masuk. Pengiriman data dari alat
+  // (POST) sengaja tidak ikut dikunci: modul IoT-nya tidak punya cara
+  // menyimpan kredensial, dan mengubah itu berarti mengubah firmware.
+  const bacaData =
+    req.method === 'GET' &&
+    (pathname === '/api' || pathname.startsWith('/api/logs'));
+  if (bacaData) {
+    const pengguna = await penggunaDariPermintaan(req);
+    if (!pengguna) {
+      kirimGagal(res, 401, 'Silakan masuk dulu untuk melihat data');
+      return;
+    }
+  }
 
   if (req.method === 'POST' && (pathname === '/api' || pathname === '/')) {
     let body = '';
@@ -266,6 +292,9 @@ const server = createServer(async (req, res) => {
 
 // Initialize DB views
 setupMaterializedViews();
+
+// Buat akun admin pertama dari environment kalau memang belum ada
+semaiAdmin();
 
 // Initialize WebSocket server attached to the HTTP server
 wsServer.initialize(server);
