@@ -18,7 +18,7 @@ services:
     build:
       context: apps/api
       dockerfile: Dockerfile
-    image: itsanla/bima:1.2.1
+    image: itsanla/bima:1.2.2
     container_name: bima-backend
     restart: always
     ports:
@@ -40,15 +40,15 @@ services:
       - ADMIN_NAME=Administrator
       - ADMIN_EMAIL=admin@steamlog.cloud
       - ADMIN_PASSWORD=SteamlogAdmin2026
-      # SMTP Gmail untuk email verifikasi. Selama SMTP_USER dan SMTP_PASS masih
-      # kosong, pendaftaran tetap jalan dan tautan verifikasinya ditulis ke log
-      # container supaya alurnya tetap bisa diuji.
+      # SMTP Gmail untuk email verifikasi. SMTP_PASS adalah App Password Gmail,
+      # ditulis tanpa spasi. SMTP_FROM wajib memakai alamat akun yang sama:
+      # Gmail menolak atau menimpa pengirim yang bukan alamatnya sendiri.
       - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=465
       - SMTP_SECURE=true
-      - SMTP_USER=
-      - SMTP_PASS=
-      - SMTP_FROM=Steamlog <no-reply@steamlog.cloud>
+      - SMTP_USER=developertipnp@gmail.com
+      - SMTP_PASS=wxhvktuackdcgrwr
+      - SMTP_FROM=Steamlog <developertipnp@gmail.com>
     networks:
       - bima-net
       - coolify
