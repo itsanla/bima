@@ -1,16 +1,10 @@
-import { Server, IncomingMessage } from 'http';
+import { Server } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import logger from 'jet-logger';
 import prisma from '../db/prisma';
-import { NAMA_COOKIE, penggunaDariToken } from '../lib/auth';
-import { bacaCookie } from '../lib/http';
 
 interface IExtWebSocket extends WebSocket {
   isAlive: boolean;
-  /** Hanya klien yang cookie sesinya sah yang menerima siaran data alat.
-   *  Modul IoT tidak pernah butuh menerima siaran, ia hanya mengirim, jadi
-   *  pembatasan ini tidak menyentuh firmware sama sekali. */
-  bolehTerima: boolean;
 }
 
 class WsServer {
@@ -23,26 +17,10 @@ class WsServer {
   public initialize(server: Server): void {
     this.wss = new WebSocketServer({ server });
 
-    this.wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
+    this.wss.on('connection', (ws: WebSocket) => {
       const extWs = ws as IExtWebSocket;
+      logger.info('[WebSocket] New client connected');
       extWs.isAlive = true;
-      extWs.bolehTerima = false;
-
-      // Cookie sesi ikut terkirim saat jabat tangan karena web dan API berbagi
-      // domain induk yang sama, jadi tidak perlu pesan auth terpisah.
-      const token = bacaCookie(req.headers.cookie)[NAMA_COOKIE];
-      void penggunaDariToken(token)
-        .then((pengguna) => {
-          if (pengguna) {
-            extWs.bolehTerima = true;
-            logger.info(`[WebSocket] Klien masuk sebagai ${pengguna.email}`);
-          } else {
-            logger.info('[WebSocket] Klien tanpa sesi (mode kirim saja)');
-          }
-        })
-        .catch((err: Error) => {
-          logger.err(`[WebSocket] Gagal memeriksa sesi: ${err.message}`);
-        });
 
       extWs.on('pong', () => {
         extWs.isAlive = true;
@@ -149,9 +127,10 @@ class WsServer {
     if (!this.wss) return;
 
     const message = JSON.stringify(data);
+    // Siaran dikirim ke semua klien tanpa kecuali: aplikasi mobile dan alat
+    // uji IoT menyambung tanpa kredensial dan harus tetap menerima data.
     this.wss.clients.forEach((client) => {
-      const extClient = client as IExtWebSocket;
-      if (client.readyState === WebSocket.OPEN && extClient.bolehTerima) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
     });

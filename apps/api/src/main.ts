@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import logger from 'jet-logger';
 import prisma from './db/prisma';
-import { penggunaDariPermintaan } from './lib/auth';
-import { kirimGagal, pasangCors } from './lib/http';
+import { pasangCors } from './lib/http';
 import { semaiAdmin } from './lib/seed';
 import { tanganiAuth } from './routes/auth';
 import { tanganiUsers } from './routes/users';
@@ -79,19 +78,11 @@ const server = createServer(async (req, res) => {
   if (await tanganiAuth(req, res, pathname)) return;
   if (await tanganiUsers(req, res, pathname)) return;
 
-  // Pembacaan data hanya untuk yang sudah masuk. Pengiriman data dari alat
-  // (POST) sengaja tidak ikut dikunci: modul IoT-nya tidak punya cara
-  // menyimpan kredensial, dan mengubah itu berarti mengubah firmware.
-  const bacaData =
-    req.method === 'GET' &&
-    (pathname === '/api' || pathname.startsWith('/api/logs'));
-  if (bacaData) {
-    const pengguna = await penggunaDariPermintaan(req);
-    if (!pengguna) {
-      kirimGagal(res, 401, 'Silakan masuk dulu untuk melihat data');
-      return;
-    }
-  }
+  // Endpoint data (/api, /api/logs, /api/logs/chart) dan WebSocket sengaja
+  // tetap terbuka untuk siapa pun, dengan payload persis seperti sebelum ada
+  // login. Aplikasi mobile dan modul IoT memakainya tanpa kredensial, jadi
+  // menguncinya akan mematikan keduanya. Pembatasan akses hanya berlaku di
+  // antarmuka web: /api/auth dan /api/users di atas tetap butuh sesi.
 
   if (req.method === 'POST' && (pathname === '/api' || pathname === '/')) {
     let body = '';

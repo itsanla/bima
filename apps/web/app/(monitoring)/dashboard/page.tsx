@@ -96,6 +96,20 @@ export default function Dashboard() {
 
   const terbaru = bacaan[0] ?? null;
   const basi = terbaru ? sekarang - terbaru.waktu > AMBANG_BASI_MS : false;
+  const adaData = terbaru !== null;
+  // Sebelum ada kiriman, angkanya ditampilkan nol dan tungku dianggap mati,
+  // bukan disembunyikan. Kartunya tetap di tempat yang sama sehingga saat data
+  // pertama masuk yang berubah hanya angkanya, bukan susunan halamannya.
+  const tampil = terbaru ?? {
+    suhu: 0,
+    timer: "00:00:00",
+    api: "OFF",
+    status: "-",
+    air_habis: false,
+    sessionId: null,
+    jalur: "-" as const,
+    waktu: 0,
+  };
   const deretSuhu = useMemo(
     () => bacaan.slice(0, 40).map((b) => b.suhu).reverse(),
     [bacaan],
@@ -115,119 +129,113 @@ export default function Dashboard() {
         <StatusSambungan tersambung={tersambung} basi={basi} />
       </div>
 
-      {!terbaru ? (
-        <div className="mt-8 rounded-3xl border border-garis bg-white px-7 py-14 text-center">
-          <p className="font-semibold text-hijau-tua">
-            {tersambung ? "Menunggu kiriman dari alat" : "Menyambung ke server"}
-          </p>
-          <p className="mx-auto mt-2 max-w-[46ch] text-[0.94rem] text-abu">
-            {tersambung
-              ? "Sambungan sudah terbuka. Angka akan muncul sendiri begitu alat mengirim bacaan berikutnya, biasanya tiap 30 detik."
-              : "Sedang mencoba membuka sambungan ke server."}
-          </p>
-        </div>
-      ) : (
-        <>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <KartuAngka
-              label="Suhu"
-              nilai={terbaru.suhu.toFixed(1)}
-              satuan="°C"
-              utama
-              redup={basi}
+          label="Suhu"
+          nilai={tampil.suhu.toFixed(1)}
+          satuan="°C"
+          utama
+          redup={adaData && basi}
             />
             <KartuAngka
-              label="Lama pengukusan"
-              nilai={terbaru.timer}
-              redup={basi}
+          label="Lama pengukusan"
+          nilai={tampil.timer}
+          redup={adaData && basi}
             />
             <KartuKeadaan
-              label="Api"
-              nilai={terbaru.api.toUpperCase() === "ON" ? "Menyala" : "Mati"}
-              nyala={terbaru.api.toUpperCase() === "ON"}
-              redup={basi}
+          label="Api"
+          nilai={tampil.api.toUpperCase() === "ON" ? "Menyala" : "Mati"}
+          nyala={tampil.api.toUpperCase() === "ON"}
+          redup={adaData && basi}
             />
             <KartuKeadaan
-              label="Air"
-              nilai={terbaru.air_habis ? "Habis" : "Cukup"}
-              nyala={!terbaru.air_habis}
-              waspada={terbaru.air_habis}
-              redup={basi}
+          label="Air"
+          nilai={tampil.air_habis ? "Habis" : "Cukup"}
+          nyala={!tampil.air_habis}
+          waspada={tampil.air_habis}
+          redup={adaData && basi}
             />
           </div>
 
           <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div className="rounded-3xl border border-garis bg-white px-6 py-6">
-              <div className="flex items-baseline justify-between gap-4">
-                <h2 className="font-bold text-hijau-tua">
-                  Suhu beberapa bacaan terakhir
-                </h2>
-                <span className="t-readout text-[0.75rem] text-abu">
-                  {deretSuhu.length} titik
-                </span>
-              </div>
-              <GrafikRingkas nilai={deretSuhu} />
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 className="font-bold text-hijau-tua">
+              Suhu beberapa bacaan terakhir
+            </h2>
+            <span className="t-readout text-[0.75rem] text-abu">
+              {deretSuhu.length} titik
+            </span>
+          </div>
+          <GrafikRingkas nilai={deretSuhu} />
             </div>
 
             <div className="rounded-3xl border border-garis bg-white px-6 py-6">
-              <h2 className="font-bold text-hijau-tua">Keterangan</h2>
-              <dl className="mt-4 space-y-3 text-[0.9rem]">
-                <Baris label="Status alat" nilai={terbaru.status} />
-                <Baris label="Sesi" nilai={terbaru.sessionId ?? "tanpa sesi"} />
-                <Baris label="Jalur masuk" nilai={terbaru.jalur} />
-                <Baris
-                  label="Bacaan terakhir"
-                  nilai={jedaWaktu(sekarang - terbaru.waktu)}
-                />
-              </dl>
+          <h2 className="font-bold text-hijau-tua">Keterangan</h2>
+          <dl className="mt-4 space-y-3 text-[0.9rem]">
+            <Baris label="Status alat" nilai={tampil.status} />
+            <Baris label="Sesi" nilai={tampil.sessionId ?? "-"} />
+            <Baris label="Jalur masuk" nilai={tampil.jalur} />
+            <Baris
+              label="Bacaan terakhir"
+              nilai={adaData ? jedaWaktu(sekarang - tampil.waktu) : "belum ada"}
+            />
+          </dl>
             </div>
           </div>
 
           <div className="mt-4 overflow-hidden rounded-3xl border border-garis bg-white">
             <h2 className="border-b border-garis px-6 py-4 font-bold text-hijau-tua">
-              Aliran data masuk
+          Aliran data masuk
             </h2>
             <div className="max-h-[22rem] overflow-y-auto">
-              <table className="w-full text-left text-[0.88rem]">
-                <thead className="sticky top-0 bg-kabut text-[0.75rem] tracking-wide text-abu uppercase">
-                  <tr>
-                    <th className="px-6 py-2.5 font-semibold">Waktu</th>
-                    <th className="px-3 py-2.5 font-semibold">Suhu</th>
-                    <th className="px-3 py-2.5 font-semibold">Timer</th>
-                    <th className="px-3 py-2.5 font-semibold">Api</th>
-                    <th className="px-6 py-2.5 font-semibold">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-garis">
-                  {bacaan.map((b, i) => (
-                    <tr key={`${b.waktu}-${i}`}>
-                      <td className="t-readout px-6 py-2.5 text-abu">
-                        {new Date(b.waktu).toLocaleTimeString("id-ID")}
-                      </td>
-                      <td className="t-readout px-3 py-2.5 font-semibold text-hijau-tua">
-                        {b.suhu.toFixed(1)}
-                      </td>
-                      <td className="t-readout px-3 py-2.5 text-abu">{b.timer}</td>
-                      <td className="px-3 py-2.5">
-                        <span
-                          className={
-                            b.api.toUpperCase() === "ON"
-                              ? "font-semibold text-api"
-                              : "text-abu"
-                          }
-                        >
-                          {b.api.toUpperCase() === "ON" ? "Menyala" : "Mati"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-2.5 text-abu">{b.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <table className="w-full text-left text-[0.88rem]">
+            <thead className="sticky top-0 bg-kabut text-[0.75rem] tracking-wide text-abu uppercase">
+              <tr>
+                <th className="px-6 py-2.5 font-semibold">Waktu</th>
+                <th className="px-3 py-2.5 font-semibold">Suhu</th>
+                <th className="px-3 py-2.5 font-semibold">Timer</th>
+                <th className="px-3 py-2.5 font-semibold">Api</th>
+                <th className="px-6 py-2.5 font-semibold">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-garis">
+              {bacaan.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-10 text-center text-abu">
+                    {tersambung
+                      ? "Sambungan terbuka. Baris akan muncul sendiri begitu alat mengirim."
+                      : "Sedang menyambung ke server."}
+                  </td>
+                </tr>
+              ) : null}
+              {bacaan.map((b, i) => (
+                <tr key={`${b.waktu}-${i}`}>
+                  <td className="t-readout px-6 py-2.5 text-abu">
+                    {new Date(b.waktu).toLocaleTimeString("id-ID")}
+                  </td>
+                  <td className="t-readout px-3 py-2.5 font-semibold text-hijau-tua">
+                    {b.suhu.toFixed(1)}
+                  </td>
+                  <td className="t-readout px-3 py-2.5 text-abu">{b.timer}</td>
+                  <td className="px-3 py-2.5">
+                    <span
+                      className={
+                        b.api.toUpperCase() === "ON"
+                          ? "font-semibold text-api"
+                          : "text-abu"
+                      }
+                    >
+                      {b.api.toUpperCase() === "ON" ? "Menyala" : "Mati"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-2.5 text-abu">{b.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
             </div>
           </div>
-        </>
-      )}
     </>
   );
 }
@@ -349,7 +357,9 @@ function GrafikRingkas({ nilai }: { nilai: number[] }) {
   if (nilai.length < 2) {
     return (
       <p className="py-10 text-center text-[0.9rem] text-abu">
-        Butuh minimal dua bacaan untuk menggambar garis.
+        {nilai.length === 0
+          ? "Belum ada bacaan yang masuk."
+          : "Baru satu bacaan. Garis muncul setelah bacaan kedua."}
       </p>
     );
   }

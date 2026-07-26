@@ -18,7 +18,7 @@ services:
     build:
       context: apps/api
       dockerfile: Dockerfile
-    image: itsanla/bima:1.2.0
+    image: itsanla/bima:1.2.1
     container_name: bima-backend
     restart: always
     ports:
@@ -87,7 +87,7 @@ services:
     build:
       context: apps/web
       dockerfile: Dockerfile
-    image: itsanla/bima-fe:1.5.0
+    image: itsanla/bima-fe:1.5.1
     container_name: bima-frontend
     restart: always
     ports:
