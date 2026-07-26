@@ -15,7 +15,7 @@ export default function HeroPhone() {
 
   return (
     <div className="relative mx-auto w-[300px] scale-[0.9] sm:scale-100">
-      <div style={{ transform: "rotate(-5deg)" }}>
+      <div style={{ transform: "rotate(-4deg)" }}>
         <Iphone
           lebar={300}
           label={`Aplikasi Bima di layar HP, menampilkan suhu ${k.suhu.toFixed(1)} derajat Celsius dan lama pengukusan ${Math.floor(jam)} jam.`}
@@ -37,7 +37,7 @@ export default function HeroPhone() {
       {/* Pembacaan suhu */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[176px] -left-[104px] hidden w-[136px] rounded-2xl px-3.5 py-2.5 sm:block"
+        className="kartu-layang absolute top-[248px] -left-[104px] hidden w-[126px] rounded-2xl px-3.5 py-2.5 sm:block"
       >
         <p className="text-[0.6rem] font-semibold tracking-wide text-abu uppercase">
           Suhu sekarang
@@ -51,7 +51,7 @@ export default function HeroPhone() {
       {/* Penanda steril, muncul hanya saat suhunya memang sudah tercapai */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[292px] -right-[84px] hidden items-center gap-2 rounded-full py-2 pr-3.5 pl-3 transition-opacity duration-500 sm:flex"
+        className="kartu-layang absolute top-[330px] -right-[80px] hidden items-center gap-2 rounded-full py-2 pr-3.5 pl-3 transition-opacity duration-500 sm:flex"
         style={{ opacity: k.steril ? 1 : 0 }}
       >
         <svg
@@ -73,7 +73,7 @@ export default function HeroPhone() {
       {/* Keadaan tungku */}
       <div
         aria-hidden="true"
-        className="kartu-layang absolute top-[412px] -right-[96px] hidden items-center gap-2.5 rounded-full py-2.5 pr-4 pl-3 sm:flex"
+        className="kartu-layang absolute top-[470px] -right-[88px] hidden items-center gap-2.5 rounded-full py-2.5 pr-4 pl-3 sm:flex"
       >
         <span
           className="block h-2.5 w-2.5 shrink-0 rounded-full"
