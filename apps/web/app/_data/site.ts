@@ -7,10 +7,10 @@ export const site = {
     "Pemberdayaan Kelompok Usaha Jamur Tiram melalui Implementasi Smart Monitoring Suhu Sterilisasi Baglog Berbasis Android",
   penyelenggara: "Politeknik Negeri Padang",
   apk: {
-    url: "https://github.com/itsanla/bima/releases/download/v1.0.0/app-release.apk",
-    halamanRilis: "https://github.com/itsanla/bima/releases/tag/v1.0.0",
-    versi: "1.0.0",
-    ukuran: "48 MB",
+    url: "https://github.com/itsanla/bima/releases/download/v2.0.0/app-release.apk",
+    halamanRilis: "https://github.com/itsanla/bima/releases/tag/v2.0.0",
+    versi: "2.0.0",
+    ukuran: "50 MB",
     namaBerkas: "app-release.apk",
   },
   /** Panduan pengguna aplikasi, PDF di Google Drive. Sudah diuji bisa dibuka
